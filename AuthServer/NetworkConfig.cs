@@ -37,7 +37,7 @@ namespace AuthServer
                 Console.WriteLine("\nReceived unmanaged byte[] from " + connection.ToString());
 
                 for (int i = 0; i < array.Length; i++)
-                    Console.WriteLine(i.ToString() + " - " + array[i].ToString());
+                    Console.Write(array[i].ToString()+"|");
             });
         }
         private static void RegisterOnConnectHandler()
