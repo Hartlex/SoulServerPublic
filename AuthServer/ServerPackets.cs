@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuthServer
 {
-    static class Packets
+    static class ServerPackets
     {
         public static byte[] HelloPacket()
         {

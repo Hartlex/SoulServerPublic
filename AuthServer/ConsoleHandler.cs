@@ -20,7 +20,7 @@ namespace AuthServer
                 case "send":
                     foreach(var conn in NetworkComms.GetExistingConnection( NetworkCommsDotNet.Connections.ApplicationLayerProtocolStatus.Disabled))
                     {
-                        conn.SendUnmanagedBytes(Packets.HelloPacket());
+                        conn.SendUnmanagedBytes(ServerPackets.HelloPacket());
                     }
                     break;
             }

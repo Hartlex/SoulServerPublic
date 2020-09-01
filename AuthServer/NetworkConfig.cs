@@ -38,7 +38,9 @@ namespace AuthServer
 
                 for (int i = 0; i < array.Length; i++)
                     Console.Write(array[i].ToString()+"|");
+                PacketParser.ParseUnmanagedPacket(array);
             });
+            // 51 1 3 4 6 49 50 55 46 48 46 48 46 49
         }
         private static void RegisterOnConnectHandler()
         {
@@ -49,7 +51,7 @@ namespace AuthServer
         private static void onConnect(Connection connection)
         {
             Console.WriteLine("Sending Hello Packet");
-            connection.SendUnmanagedBytes(Packets.HelloPacket());
+            connection.SendUnmanagedBytes(ServerPackets.HelloPacket());
         }
         #endregion
 
