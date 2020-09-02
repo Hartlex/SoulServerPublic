@@ -34,13 +34,10 @@ namespace AuthServer
         {
             NetworkComms.AppendGlobalIncomingUnmanagedPacketHandler((header, connection, array) =>
             {
-                Console.WriteLine("\nReceived unmanaged byte[] from " + connection.ToString());
+                PacketParser.ParseUnmanagedPacket(array,connection);
+            }
+            );
 
-                for (int i = 0; i < array.Length; i++)
-                    Console.Write(array[i].ToString()+"|");
-                PacketParser.ParseUnmanagedPacket(array);
-            });
-            // 51 1 3 4 6 49 50 55 46 48 46 48 46 49
         }
         private static void RegisterOnConnectHandler()
         {
@@ -51,7 +48,7 @@ namespace AuthServer
         private static void onConnect(Connection connection)
         {
             Console.WriteLine("Sending Hello Packet");
-            connection.SendUnmanagedBytes(ServerPackets.HelloPacket());
+            connection.SendUnmanagedBytes(ServerPackets.ClientAsk());
         }
         #endregion
 

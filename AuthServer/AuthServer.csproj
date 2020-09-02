@@ -54,10 +54,13 @@
     <Compile Include="ConsoleHandler.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NetworkConfig.cs" />
+    <Compile Include="NetworkRecieve.cs" />
     <Compile Include="PacketParser.cs" />
+    <Compile Include="PacketStructs.cs" />
     <Compile Include="ServerPackets.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SunPacket.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

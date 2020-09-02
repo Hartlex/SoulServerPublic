@@ -12,10 +12,9 @@ namespace AuthServer
     {
         static void Main(string[] args)
         {
-            IPAddress addr = IPAddress.Parse("127.0.0.1");
-            //Start Logging
-            Logger log = new Logger("AuthLog");
 
+            //Start Logging
+            //Logger log = new Logger("AuthLog");
             //Initialize Network
             NetworkConfig.InitialiseNetwork();
 
