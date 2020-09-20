@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F7C9E22F-64D6-4AC3-86C1-AC5EE2892913}</ProjectGuid>
+    <ProjectGuid>{0FC035D4-13DC-4871-ADC5-D53A8D9AE906}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AuthServer</RootNamespace>
-    <AssemblyName>AuthServer</AssemblyName>
+    <RootNamespace>AgentServer</RootNamespace>
+    <AssemblyName>AgentServer</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -39,8 +39,7 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="InTheHand.Net.Personal">
       <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\InTheHand.Net.Personal.dll</HintPath>
     </Reference>
     <Reference Include="JSONSerializer">
@@ -49,8 +48,7 @@
     <Reference Include="KaymakNetwork">
       <HintPath>..\..\..\..\Documents\KaymakNetwork\KaymakNetwork\bin\Debug\netstandard2.0\KaymakNetwork.dll</HintPath>
     </Reference>
-    <Reference Include="NetworkCommsDotNet, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NetworkCommsDotNet">
       <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\NetworkCommsDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -85,11 +83,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgentConnection.cs" />
-    <Compile Include="AuthPacketProcessors.cs" />
+    <Compile Include="AgentPacketProcessors.cs" />
+    <Compile Include="AuthServerConnection.cs" />
     <Compile Include="ConsoleHandler.cs" />
     <Compile Include="DBConnection.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="NetworkConfig.cs" />
     <Compile Include="PacketParser.cs" />
     <Compile Include="Program.cs" />

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F7C9E22F-64D6-4AC3-86C1-AC5EE2892913}</ProjectGuid>
+    <ProjectGuid>{7EB003C1-B34B-464C-B656-6C04926CC048}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AuthServer</RootNamespace>
-    <AssemblyName>AuthServer</AssemblyName>
+    <RootNamespace>DatabaseProxy</RootNamespace>
+    <AssemblyName>DatabaseProxy</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -49,8 +49,7 @@
     <Reference Include="KaymakNetwork">
       <HintPath>..\..\..\..\Documents\KaymakNetwork\KaymakNetwork\bin\Debug\netstandard2.0\KaymakNetwork.dll</HintPath>
     </Reference>
-    <Reference Include="NetworkCommsDotNet, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NetworkCommsDotNet">
       <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\NetworkCommsDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -86,12 +85,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentConnection.cs" />
-    <Compile Include="AuthPacketProcessors.cs" />
+    <Compile Include="AgentPackets.cs" />
+    <Compile Include="AuthConnection.cs" />
+    <Compile Include="AuthPackets.cs" />
     <Compile Include="ConsoleHandler.cs" />
-    <Compile Include="DBConnection.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="DatabaseFunctions.cs" />
+    <Compile Include="DatabaseHelper.cs" />
     <Compile Include="NetworkConfig.cs" />
-    <Compile Include="PacketParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

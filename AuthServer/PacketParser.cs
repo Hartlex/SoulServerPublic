@@ -2,16 +2,16 @@
 using NetworkCommsDotNet.Connections;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SunCommon;
 
 namespace AuthServer
 {
     internal static class PacketParser
     {
-        
-
         public static void ParseUnmanagedPacket(byte[] packet, Connection connection)
         {
             ByteBuffer buffer = new ByteBuffer(packet);                 //Convert to Buffer
@@ -20,7 +20,7 @@ namespace AuthServer
             var protocolID = (int)buffer.ReadByte();
             if(FindPacket(packetID, protocolID, buffer, connection))
             {
-                Console.WriteLine("Packet from with ID: " + packetID + "|" + protocolID+" succesfully received and parsed");
+                Console.WriteLine("Packet from "+connection.ConnectionInfo.RemoteEndPoint +" with ID: " + packetID + "|" + protocolID+" succesfully received and parsed");
                 return;
             }
             Console.WriteLine("\nReceived unmanaged byte[] ");
@@ -38,33 +38,57 @@ namespace AuthServer
             }
             return charArray;
         }
-        
+        private static void LogPacketRecieved(int packetID,int protocolID,ByteBuffer buffer,SunPacket packet)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(DateTime.Now + ": Packet(" + packetID + "|" + protocolID + ") with bytes: ");
+            foreach(byte b in buffer.Data)
+            {
+                sb.Append((int)b+"|");
+            }
+            var dir = Directory.CreateDirectory(Environment.CurrentDirectory + "\\Log\\" + packet.ToString());
+            File.AppendAllText(dir.FullName+"\\Log.txt", sb.ToString()+Environment.NewLine);
+        }
 
         private static bool FindPacket(int packetID,int protocolID,ByteBuffer buffer,Connection connection)
         {
-            var identifier = int.Parse(packetID.ToString() + protocolID.ToString());
-            SunPacket packet;
-            switch (identifier)
-            {
-                case 511:
-                    packet = new IPPacket(buffer, connection);
-                    packet.onReceive();
-                    return true;
-                case 513:
-                    packet = new LoginPacket(buffer, connection);
-                    packet.onReceive();
-                    return true;
-                case 5115:
-                    packet = new AskForServerList(buffer, connection);
-                    packet.onReceive();
-                    return true;
-                case 5119:
-                    packet = new SelectServerAndChannel(buffer, connection);
-                    packet.onReceive();
-                    return true;
-                
-            }
-            return false;
+            if (!AuthPacketProcessors.FindPacketAction((PacketCategory) packetID, protocolID, out var action))
+                return false;
+            action(buffer, connection);
+            return true;
+            //var identifier = int.Parse(packetID.ToString() + protocolID.ToString());
+            //switch (identifier)
+            //{
+            //    //TODO REMOVE THIS FKCN SWITCH STATEMENT
+            //    case 511:
+            //        var c2SAskConnect = new AuthPackets.C2SAskConnect(buffer,connection);
+            //        LogPacketRecieved(packetID,protocolID,buffer, c2SAskConnect);
+            //        c2SAskConnect.OnReceive();
+            //        return true;
+            //    case 513:
+            //        var C2SAskLogin = new AuthPackets.C2SAskLogin(buffer, connection);
+            //        LogPacketRecieved(packetID, protocolID, buffer, C2SAskLogin);
+            //        C2SAskLogin.OnReceive();
+            //        DBConnection.connection.SendObject("UserLogin",new[]{C2SAskLogin.Username,C2SAskLogin.DecPassword,CCM.getConnectionGUID(connection).ToString()});
+            //        return true;
+            //    case 5115:
+            //        var C2SAskForServerList = new AuthPackets.C2SAskForServerList(connection);
+            //        LogPacketRecieved(packetID, protocolID, buffer, C2SAskForServerList);
+            //        C2SAskForServerList.OnReceive();
+            //        return true;
+            //    case 5119:
+            //        var C2SAskServerSelect = new AuthPackets.C2SAskServerSelect(buffer, connection);
+            //        LogPacketRecieved(packetID, protocolID, buffer, C2SAskServerSelect);
+            //        C2SAskServerSelect.OnReceive();
+            //        return true;
+
+            //}
+            //return false;
+        }
+
+        public static bool UserLogin(string username, string password)
+        {
+            return true;
         }
 
         #region GetStringMethods

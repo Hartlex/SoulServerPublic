@@ -8,6 +8,7 @@ using System.Net;
 using NetworkCommsDotNet.Connections;
 using NetworkCommsDotNet.DPSBase;
 using NetworkCommsDotNet.Connections.TCP;
+using SunCommon;
 
 namespace AuthServer
 {
@@ -17,7 +18,8 @@ namespace AuthServer
         public static void InitialiseNetwork()
         {
             RegisterPacketHandler();
-            StartListening("127.0.0.1", 44405);
+            StartListening("127.0.0.1", 44405); //Client
+            //StartListening("127.0.0.1", 8001);  //AgentServer
             RegisterOnConnectHandler();
         }
 
@@ -35,8 +37,16 @@ namespace AuthServer
             NetworkComms.AppendGlobalIncomingUnmanagedPacketHandler((header, connection, array) =>
             {
                 PacketParser.ParseUnmanagedPacket(array,connection);
+                
             }
             );
+            //NetworkComms.AppendGlobalIncomingPacketHandler<string>("AgentAuthConnection",(
+            //    (header, connection, incomingObject) =>
+            //    {
+            //        connection.SendObject("AgentAuthConnectionACK");
+            //        AgentConnection.connection = connection;
+            //        AgentConnection.RegisterPackets();
+            //    } ));
 
         }
         private static void RegisterOnConnectHandler()
@@ -47,8 +57,12 @@ namespace AuthServer
         }
         private static void onConnect(Connection connection)
         {
-            Console.WriteLine("Sending Hello Packet");
-            connection.SendUnmanagedBytes(ServerPackets.ClientAsk());
+            Console.WriteLine(connection.ConnectionInfo.RemoteEndPoint);
+            //TODO generate rendom keys
+            sbyte[] encKey = { 00, 00, 00, 00 };
+            CCM.AddCC(connection,encKey);
+            var packet = new AuthPackets.S2CHelloPacket(encKey);
+            packet.Send(connection);
         }
         #endregion
 

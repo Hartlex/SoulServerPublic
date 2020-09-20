@@ -1,6 +1,7 @@
 ﻿using NetworkCommsDotNet.Tools;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -12,9 +13,16 @@ namespace AuthServer
     {
         static void Main(string[] args)
         {
-
-            //Start Logging
             //Logger log = new Logger("AuthLog");
+            Console.WriteLine("Connecting to DBServer");
+            DBConnection.IniitializeConnection("127.0.0.1", 7000);
+            AuthPacketProcessors.Initialize();
+            while (!DBConnection.isConnected)
+            {
+                //Console.Write(".");
+            }
+            //Start Logging
+
             //Initialize Network
             NetworkConfig.InitialiseNetwork();
 

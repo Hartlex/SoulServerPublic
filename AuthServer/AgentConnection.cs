@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetworkCommsDotNet.Connections;
 
 namespace AuthServer
 {
-    class NetworkRecieve
+    static class AgentConnection
     {
-        enum ClientPackets
+        public static Connection connection;
+
+        public static void RegisterPackets()
         {
-            IpPacket = 1
+
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using NetworkCommsDotNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SunCommon;
 
-namespace AuthServer
+namespace DatabaseProxy
 {
     static class ConsoleHandler
     {
@@ -17,9 +15,6 @@ namespace AuthServer
             {
                 case "exit":
                     Environment.Exit(0);
-                    break;
-                case "connections":
-                    //CCM.PrintConnections();
                     break;
 
             }
