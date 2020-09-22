@@ -43,6 +43,7 @@ namespace AgentServer
         {
             if (!AllPackets.TryGetValue(PacketCategory.AgentConnection, out var connectionActions)) return;
             connectionActions.Add(118,OnC2SAskEnterCharSelect);
+            connectionActions.Add(31, OnC2SAskEnterGame);
         }
 
 
@@ -50,6 +51,9 @@ namespace AgentServer
         {
             if (!AllPackets.TryGetValue(PacketCategory.AgentCharacter, out var characterActions)) return;
             characterActions.Add(111,OnC2SAskCreateCharacter);
+            characterActions.Add(137,OnC2SAskDeleteCharacter);
+            characterActions.Add(81,OnC2SAskDuplicateName);
+
         }
         private static void OnC2SAskEnterCharSelect(ByteBuffer buffer, Connection connection)
         {
@@ -59,12 +63,15 @@ namespace AgentServer
             cc.AgentConnection = connection;
             cc.UserID = userID;
             CCM.AddCC(cc);
-            //TODO get charlist fromDB
-            DBConnection.connection.SendObject("AskForCharacterList",userID);
-            //var packet = new ConnectionPackets.S2CAnsEnterCharSelect(userID);
-            //packet.Send(connection);
+            DBConnection.connection.SendObject("AskForCharacterList", userID);
         }
 
+        private static void OnC2SAskDuplicateName(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket= new CharacterPackets.C2SAskDublicateNameCheck(buffer,connection);
+            var userID = CCM.GetClientConnection(connection).UserID;
+            DBConnection.connection.SendObject("AskDuplicateName", new[]{incPacket.name,userID.ToString()});
+        }
         private static void OnC2SAskCreateCharacter(ByteBuffer buffer, Connection connection)
         {
             var incPacket = new CharacterPackets.C2SAskCreateCharacter(buffer,connection);
@@ -80,6 +87,20 @@ namespace AgentServer
             };
             
             DBConnection.connection.SendObject("CreateCharacter",chaInfo);
+        }
+
+        private static void OnC2SAskDeleteCharacter(ByteBuffer buffer, Connection connection)
+        {
+            var packet = new CharacterPackets.C2SAskDeleteCharacter(buffer,connection);
+            var userID = CCM.GetClientConnection(connection).UserID;
+            DBConnection.connection.SendObject("DeleteCharacter",new[]{userID,packet.charSlot});
+        }
+
+        private static void OnC2SAskEnterGame(ByteBuffer buffer, Connection connection)
+        {
+            var packet = new ConnectionPackets.C2SAskEnterGame(buffer.ReadByte(),connection);
+            var userID = CCM.GetClientConnection(connection).UserID;
+            DBConnection.connection.SendObject("GetFullCharacter",new[]{userID,packet.charSlot});
         }
     }
 }

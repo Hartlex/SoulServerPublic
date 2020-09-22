@@ -11,11 +11,8 @@ namespace DatabaseProxy
 
         static void Main(string[] args)
         {
-            //DatabaseFunctions.CreateCharacter(2, "Nightmore1", 1, 1, 1, 1,out var character);
-            //DatabaseFunctions.CreateCharacter(2, "Nightmore2", 1, 1, 1, 1, out var character2);
-            DatabaseFunctions.getAllCharacters(2,out var c);
-            //AgentPackets.CreateCharacterPacket("2","Nightmore","1","1","1","1");
-            //AgentPackets.CreateCharacterPacket("2","Nightmore2","1","1","1","1");
+
+            //DatabaseFunctions.GetFullCharacter(2, 0, out var fullCharBytes);
             NetworkConfig.InitialiseNetwork();
             while (true)
             {
