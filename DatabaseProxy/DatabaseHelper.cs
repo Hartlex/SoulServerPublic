@@ -222,7 +222,7 @@ namespace DatabaseProxy
         public long money;
         public int experience;
         public int RemainStat, RemainSkill, selectedStyle, region;
-        public short LocationX, LocationY, LocationZ;
+        public Single LocationX, LocationY, LocationZ;
         public short strength, dexterity, vitality, intelligence, spirit, skillStat1, skillStat2;
         public byte[] inventoryItem = { 00 };
         public byte[] tmpInventoryItem = { 00 };
@@ -255,9 +255,9 @@ namespace DatabaseProxy
                     RemainSkill = reader.GetInt32(10);
                     selectedStyle = reader.GetInt32(11);
                     region = reader.GetInt32(12);
-                    LocationX = reader.GetInt16(13);
-                    LocationY = reader.GetInt16(14);
-                    LocationZ = reader.GetInt16(15);
+                    LocationX = reader.GetFloat(13);
+                    LocationY = reader.GetFloat(14);
+                    LocationZ = reader.GetFloat(15);
                     strength = reader.GetInt16(16);
                     dexterity = reader.GetInt16(17);
                     vitality = reader.GetInt16(18);

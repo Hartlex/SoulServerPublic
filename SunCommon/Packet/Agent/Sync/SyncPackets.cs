@@ -108,15 +108,33 @@ namespace SunCommon
 
         public class C2SAskKeyboardMovePacket : SyncPacket
         {
-            private SunVector currentPosition;
-            private ushort angle;
-            private ushort tileIndex;
-            private byte moveState;
+            public SunVector currentPosition;
+            public byte[] angle;
+            public byte[] tileIndex;
+            public byte moveState;
 
             public C2SAskKeyboardMovePacket(ByteBuffer buffer) : base(43)
             {
-
+                currentPosition = new SunVector(buffer.ReadBlock(12));
+                angle = buffer.ReadBlock(2);
+                tileIndex = buffer.ReadBlock(2);
+                moveState = buffer.ReadByte();
             }
+        }
+
+        public class C2SAskMouseMove : SyncPacket
+        {
+            public byte[] unk1;
+            public SunVector currentPosition;
+            public SunVector destinationPosition;
+
+            public C2SAskMouseMove(ByteBuffer buffer) : base(202)
+            {
+                unk1 = buffer.ReadBlock(2);
+                currentPosition = new SunVector(buffer.ReadBlock(12));
+                destinationPosition = new SunVector(buffer.ReadBlock(16));
+            }
+
         }
     }
 }

@@ -61,11 +61,11 @@ namespace SunCommon
 
         public class SunVector
         {
-            private short x;
-            private short y;
-            private short z;
+            private Single x;
+            private Single y;
+            private Single z;
 
-            public SunVector(short x, short y, short z)
+            public SunVector(Single x, Single y, Single z)
             {
                 this.x = x;
                 this.y = y;
@@ -74,17 +74,17 @@ namespace SunCommon
 
             public SunVector(byte[] bytes)
             {
-                this.x = BitConverter.ToInt16(new byte[] { bytes[0], bytes[1] }, 0);
-                this.y = BitConverter.ToInt16(new byte[] { bytes[2], bytes[3] }, 0);
-                this.z = BitConverter.ToInt16(new byte[] { bytes[4], bytes[5] }, 0);
+                this.x = BitConverter.ToSingle(new byte[] { bytes[0], bytes[1], bytes[2],bytes[3] }, 0);
+                this.y = BitConverter.ToSingle(new byte[] { bytes[4], bytes[5], bytes[6], bytes[7] }, 0);
+                this.z = BitConverter.ToSingle(new byte[] { bytes[8], bytes[9], bytes[10], bytes[11] }, 0);
             }
 
             public byte[] GetBytes()
             {
-                var result = new byte[6];
-                Buffer.BlockCopy(BitConverter.GetBytes(x), 0, result, 0, 2);
-                Buffer.BlockCopy(BitConverter.GetBytes(y), 0, result, 2, 2);
-                Buffer.BlockCopy(BitConverter.GetBytes(z), 0, result, 4, 2);
+                var result = new byte[12];
+                Buffer.BlockCopy(BitConverter.GetBytes(x), 0, result, 0, 4);
+                Buffer.BlockCopy(BitConverter.GetBytes(y), 0, result, 4, 4);
+                Buffer.BlockCopy(BitConverter.GetBytes(z), 0, result, 8, 4);
                 return result;
             }
         }
@@ -100,10 +100,10 @@ namespace SunCommon
             private readonly byte[] level;
             private readonly byte[] region;
 
-            private readonly SunVector position;
-            //private readonly byte[] posX;
-            //private readonly byte[] posY;
-            //private readonly byte[] posZ;
+            //private readonly SunVector position;
+            private readonly byte[] posX;
+            private readonly byte[] posY;
+            private readonly byte[] posZ;
             private readonly byte equipNumber;
             private readonly byte[] equipInfo;
             private readonly byte unk1;
@@ -122,10 +122,10 @@ namespace SunCommon
                 classCode = (byte) character.ClassCode;
                 level = ByteUtils.ToByteArray(character.Level, 2);
                 region = ByteUtils.ToByteArray(character.CharacterPosition.Region, 4);
-                position = new SunVector(character.CharacterPosition.LocationX,character.CharacterPosition.LocationY,character.CharacterPosition.LocationZ);
-                //posX = ByteUtils.ToByteArray(character.CharacterPosition.LocationX, 2);
-                //posY = ByteUtils.ToByteArray(character.CharacterPosition.LocationY, 2);
-                //posZ = ByteUtils.ToByteArray(character.CharacterPosition.LocationZ, 2);
+                //position = new SunVector(character.CharacterPosition.LocationX,character.CharacterPosition.LocationY,character.CharacterPosition.LocationZ);
+                posX = ByteUtils.ToByteArray((short)character.CharacterPosition.LocationX, 2);
+                posY = ByteUtils.ToByteArray((short)character.CharacterPosition.LocationY, 2);
+                posZ = ByteUtils.ToByteArray((short)character.CharacterPosition.LocationZ, 2);
                 equipNumber = 0;
                 equipInfo = new EquipInfo(character.Inventory.EquipItem).ToBytes();
                 unk1 = 1;
@@ -147,7 +147,10 @@ namespace SunCommon
                 this.classCode = classCode;
                 this.level = level;
                 this.region = region;
-                this.position = new SunVector(BitConverter.ToInt16(posX,0), BitConverter.ToInt16(posY, 0), BitConverter.ToInt16(posZ, 0));
+                this.posX = posX;
+                this.posY = posY;
+                this.posZ = posZ;
+                //this.position = new SunVector(BitConverter.ToInt16(posX,0), BitConverter.ToInt16(posY, 0), BitConverter.ToInt16(posZ, 0));
                 this.equipNumber = 0;
                 this.equipInfo = equipInfo;
                 unk1 = 0;
@@ -167,10 +170,10 @@ namespace SunCommon
                 result.Add(classCode);
                 result.AddRange(level);
                 result.AddRange(region);
-                result.AddRange(position.GetBytes());
-                //result.AddRange(posX);
-                //result.AddRange(posY);
-                //result.AddRange(posZ);
+                //result.AddRange(position.GetBytes());
+                result.AddRange(posX);
+                result.AddRange(posY);
+                result.AddRange(posZ);
                 result.Add(equipNumber);
                 result.AddRange(equipInfo);
                 result.Add(unk1);
