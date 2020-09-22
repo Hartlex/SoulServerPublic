@@ -52,7 +52,14 @@ namespace SunCommon
 
         public static void AddCC(ClientConnection cc)
         {
-            ClientConnections.Add(cc.ConnectionGuid,cc);
+            if (ClientConnections.ContainsKey(cc.ConnectionGuid))
+            {
+                ClientConnections[cc.ConnectionGuid] = cc;
+            }
+            else
+            {
+                ClientConnections.Add(cc.ConnectionGuid,cc);
+            }
         }
         public static ClientConnection GetClientConnection(int userID)
         {

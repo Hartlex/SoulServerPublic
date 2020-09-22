@@ -50,22 +50,45 @@ namespace SunCommon
             private byte charCount;
             private byte unk2 = 00;
             private byte[] characterInfobytes;
-            public S2CAnsEnterCharSelect(int userID,int charCount,byte[] characterInfobytes) : base(152)
+            public S2CAnsEnterCharSelect(byte[] characterInfobytes) : base(152)
             {
 
-                this.userID = ByteUtils.ToByteArray(userID, 4);
-                this.charCount = (byte)charCount;
-                this.unk2 = this.charCount;
+                //this.userID = ByteUtils.ToByteArray(userID, 4);
+                //this.charCount = (byte)charCount;
+                //this.unk2 = this.charCount;
                 this.characterInfobytes = characterInfobytes;
             }
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(userID, new byte[] {charCount, unk2},characterInfobytes);
+                var sb = getSendableBytes(characterInfobytes);
                 connection.SendUnmanagedBytes(sb);
             }
         }
 
+        public class C2SAskEnterGame : ConnectionPacket
+        {
+            public byte charSlot;
+            public C2SAskEnterGame(byte charSlot, Connection connection) : base(31, connection)
+            {
+                this.charSlot = charSlot;
+            }
 
+        }
+
+        public class S2CAnsEnterGame : ConnectionPacket
+        {
+            public byte[] characterID;
+            public S2CAnsEnterGame(int characterID) : base(131)
+            {
+                this.characterID = BitConverter.GetBytes(characterID);
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = getSendableBytes(characterID);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
     }
 }

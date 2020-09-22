@@ -23,6 +23,25 @@ namespace DatabaseProxy
             {
                 AgentPackets.GetAllCharacters(userID);
             } ));
+            connection.AppendIncomingPacketHandler<int[]>("DeleteCharacter",((header, connection1, incomingObject) =>
+            {
+                var userID = incomingObject[0];
+                var charSlot = incomingObject[1];
+                AgentPackets.DeleteCharacter(userID, charSlot);
+            }));
+            connection.AppendIncomingPacketHandler<string[]>("AskDuplicateName",(
+                (header, connection1, incomingObject) =>
+                {
+                    var name = incomingObject[0];
+                    var userID = Int32.Parse(incomingObject[1]);
+                    AgentPackets.CheckDuplicateName(name, userID);
+                }));
+            connection.AppendIncomingPacketHandler<int[]>("GetFullCharacter",((header, connection1, incomingObject) =>
+            {
+                var userID = incomingObject[0];
+                var charSlot = incomingObject[1];
+                AgentPackets.GetFullCharacter(userID, charSlot);
+            }));
         }
     }
 }

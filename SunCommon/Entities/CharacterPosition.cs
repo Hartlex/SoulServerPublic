@@ -11,9 +11,9 @@ namespace SunCommon.Entities
         public int Id { get; set; }
         public int Region { get; set; }
         public int Angle { get; set; }
-        public float LocationX { get; set; }
-        public float LocationY { get; set; }
-        public float LocationZ { get; set; }
+        public short LocationX { get; set; }
+        public short LocationY { get; set; }
+        public short LocationZ { get; set; }
     }
 }
 
