@@ -178,10 +178,10 @@ namespace DatabaseProxy
                     cmd.Parameters.Add("@CharState", SqlDbType.TinyInt).Value = c.CharState;
                     cmd.Parameters.Add("@StateTime", SqlDbType.TinyInt).Value = c.StateTime;
                     cmd.Parameters.Add("@Region", SqlDbType.Int).Value = c.CharacterPosition.Region;
-                    cmd.Parameters.Add("@LocationX", SqlDbType.SmallInt).Value = c.CharacterPosition.LocationX;
-                    cmd.Parameters.Add("@LocationY", SqlDbType.SmallInt).Value = c.CharacterPosition.LocationY;
+                    cmd.Parameters.Add("@LocationX", SqlDbType.SmallInt).Value = (short)c.CharacterPosition.LocationX;
+                    cmd.Parameters.Add("@LocationY", SqlDbType.SmallInt).Value = (short)c.CharacterPosition.LocationY;
 
-                    cmd.Parameters.Add("@LocationZ", SqlDbType.SmallInt).Value = c.CharacterPosition.LocationZ;
+                    cmd.Parameters.Add("@LocationZ", SqlDbType.SmallInt).Value = (short)c.CharacterPosition.LocationZ;
                     cmd.Parameters.Add("@TitleTime", SqlDbType.BigInt).Value = c.TitleTime;
                     cmd.Parameters.Add("@InvisOpt", SqlDbType.TinyInt).Value = c.InvisibleOpt;
                     cmd.Parameters.Add("@InventoryLock", SqlDbType.TinyInt).Value = c.Inventory.InventoryLock;
