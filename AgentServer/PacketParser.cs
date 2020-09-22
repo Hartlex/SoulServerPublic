@@ -28,7 +28,7 @@ namespace AgentServer
             for (int i = 0; i < packet.Length; i++)
                 Console.Write(packet[i].ToString() + "|");
         }
-        private static void LogPacketRecieved(int packetID, int protocolID, ByteBuffer buffer, SunPacket packet)
+        private static void LogPacketRecieved(int packetID, int protocolID, ByteBuffer buffer, string name)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(DateTime.Now + ": Packet(" + packetID + "|" + protocolID + ") with bytes: ");
@@ -36,13 +36,14 @@ namespace AgentServer
             {
                 sb.Append((int)b + "|");
             }
-            var dir = Directory.CreateDirectory(Environment.CurrentDirectory + "\\Log\\" + packet.ToString());
+            var dir = Directory.CreateDirectory(Environment.CurrentDirectory + "\\Log\\" + name);
             File.AppendAllText(dir.FullName + "\\Log.txt", sb.ToString() + Environment.NewLine);
         }
         private static bool FindPacket(int packetID, int protocolID, ByteBuffer buffer, Connection connection)
         {
             if (!AgentPacketProcessors.FindPacketAction((PacketCategory)packetID, protocolID, out var action))
                 return false;
+            LogPacketRecieved(packetID,protocolID,buffer,action.Method.ToString());
             action(buffer, connection);
             return true;
 

@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SunCommon;
 
-namespace AgentServer
+namespace WorldServer
 {
     class Program
     {
         static void Main(string[] args)
         {
-            DBConnection.IniitializeConnection("127.0.0.1",7001);
+            //var logger  = new Logger("WorldLog.txt");
             NetworkConfig.InitializeNetwork();
-            AgentPacketProcessors.Initialize();
+            AgentConnection.IniitializeConnection("127.0.0.1",6001);
             while (true)
             {
                 ConsoleHandler.ConsoleTick();
