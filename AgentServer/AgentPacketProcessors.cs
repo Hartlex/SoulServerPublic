@@ -32,11 +32,21 @@ namespace AgentServer
             Dictionary<int, Action<ByteBuffer, Connection>> characterActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
             AllPackets.Add(PacketCategory.AgentCharacter, characterActions);
 
+            Dictionary<int, Action<ByteBuffer, Connection>> syncActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
+            AllPackets.Add(PacketCategory.AgentSync, syncActions);
+
         }
         private static void InitializeProtocols()
         {
             InitConnectionPackets();
             InitCharacterPackets();
+            InitSyncPackets();
+        }
+
+        private static void InitSyncPackets()
+        {
+            if (!AllPackets.TryGetValue(PacketCategory.AgentSync, out var syncActions)) return;
+            syncActions.Add(141,OnC2SAskEnterWorld);
         }
 
         private static void InitConnectionPackets()
@@ -98,9 +108,29 @@ namespace AgentServer
 
         private static void OnC2SAskEnterGame(ByteBuffer buffer, Connection connection)
         {
-            var packet = new ConnectionPackets.C2SAskEnterGame(buffer.ReadByte(),connection);
+            //byte charSlot=0;
+            var selectedCharSlot = buffer.ReadByte();
+            short charSlot = buffer.ReadInt16();
+            var x = charSlot / 128;
+            var packet = new ConnectionPackets.C2SAskEnterGame((byte)x,connection);
             var userID = CCM.GetClientConnection(connection).UserID;
             DBConnection.connection.SendObject("GetFullCharacter",new[]{userID,packet.charSlot});
+        }
+
+        private static void OnC2SAskEnterWorld(ByteBuffer buffer, Connection connection)
+        {
+            
+            var incPacket= new SyncPackets.C2SAskEnterWorld(buffer);
+            var cc = CCM.GetClientConnection(connection);
+
+            var positionInfoPacket = new SyncPackets.S2CAnsPlayerPositionInfo(cc.Character);
+            positionInfoPacket.Send(connection);
+
+            var guildInformationPacket = new SyncPackets.S2CAnsGuildInfo(cc.Character);
+            guildInformationPacket.Send(connection);
+
+            var equipInformationPacket = new SyncPackets.S2CAnsEquipInfo(cc.Character);
+            equipInformationPacket.Send(connection);
         }
     }
 }

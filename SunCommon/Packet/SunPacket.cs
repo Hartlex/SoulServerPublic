@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using KaymakNetwork;
 using NetworkCommsDotNet.Connections;
 
 namespace SunCommon
@@ -57,12 +59,14 @@ namespace SunCommon
             sb.InsertRange(0,ByteUtils.PacketLength(sb));
             return sb.ToArray();
         }
+
     }
 
     public enum PacketCategory
     {
         AuthPackets = 51,
         AgentConnection = 72,
-        AgentCharacter = 165
+        AgentCharacter = 165,
+        AgentSync = 253
     }
 }

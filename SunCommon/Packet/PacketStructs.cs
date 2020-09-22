@@ -273,5 +273,25 @@ namespace SunCommon
                 return result.ToArray();
             }
         }
+
+        public class StateSlotInfo
+        {
+            private short slotCode;
+            private int time;
+
+            public StateSlotInfo(byte[] value)
+            {
+                slotCode = BitConverter.ToInt16(ByteUtils.SlicedBytes(value, 0, 2),0);
+                time = BitConverter.ToInt32(ByteUtils.SlicedBytes(value, 2, 6), 0);
+            }
+
+            public byte[] ToBytes()
+            {
+                var result = new List<byte>();
+                result.AddRange(BitConverter.GetBytes(slotCode));
+                result.AddRange(BitConverter.GetBytes(time));
+                return result.ToArray();
+            }
+        }
     }
 }

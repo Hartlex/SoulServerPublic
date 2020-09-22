@@ -100,6 +100,8 @@
     <Compile Include="Packet\Agent\Character\CharacterPackets.cs" />
     <Compile Include="Packet\Agent\Connection\ConnectionPacket.cs" />
     <Compile Include="Packet\Agent\Connection\ConnectionPackets.cs" />
+    <Compile Include="Packet\Agent\Sync\SyncPacket.cs" />
+    <Compile Include="Packet\Agent\Sync\SyncPackets.cs" />
     <Compile Include="Packet\Auth\AuthPacket.cs" />
     <Compile Include="Packet\Auth\AuthPackets.cs" />
     <Compile Include="ByteUtils.cs" />

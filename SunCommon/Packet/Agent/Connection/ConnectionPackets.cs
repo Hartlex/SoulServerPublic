@@ -79,9 +79,11 @@ namespace SunCommon
         public class S2CAnsEnterGame : ConnectionPacket
         {
             public byte[] characterID;
+            public byte[] unk1 = {0,0,0,0};
             public S2CAnsEnterGame(int characterID) : base(131)
             {
                 this.characterID = BitConverter.GetBytes(characterID);
+                
             }
 
             public new void Send(Connection connection)
@@ -90,5 +92,9 @@ namespace SunCommon
                 connection.SendUnmanagedBytes(sb);
             }
         }
+
+
+
+
     }
 }

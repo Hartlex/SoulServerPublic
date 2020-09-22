@@ -94,8 +94,24 @@ namespace AgentServer
                 var conn = CCM.GetClientConnection(userID);
                 var character = new Character(fullCharacterBytes);
                 conn.Character = character;
+                var playerInfoPacket = new CharacterPackets.S2CCharacterInfo(character);
+                playerInfoPacket.Send(conn.AgentConnection);
+
+                var skillInfoPacket = new CharacterPackets.S2CSkillInfo(character);
+                skillInfoPacket.Send(conn.AgentConnection);
+
+                var quickInfoPacket = new CharacterPackets.S2CQuickInfo(character);
+                quickInfoPacket.Send(conn.AgentConnection);
+
+                var styleInfoPacket = new CharacterPackets.S2CStyleInfo(character);
+                styleInfoPacket.Send(conn.AgentConnection);
+
+                var stateInfoPacket = new CharacterPackets.S2CStatePacket(character);
+                stateInfoPacket.Send(conn.AgentConnection);
+
                 var packet = new ConnectionPackets.S2CAnsEnterGame(character.Id);
                 packet.Send(conn.AgentConnection);
+
             }));
         }
     }
