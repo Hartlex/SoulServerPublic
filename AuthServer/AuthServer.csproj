@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F7C9E22F-64D6-4AC3-86C1-AC5EE2892913}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AuthServer</RootNamespace>
+    <AssemblyName>AuthServer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>D:\SoulServer\Server\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DistributedFileSystem">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\DistributedFileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\InTheHand.Net.Personal.dll</HintPath>
+    </Reference>
+    <Reference Include="JSONSerializer">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\JSONSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="KaymakNetwork">
+      <HintPath>..\..\..\..\Documents\KaymakNetwork\KaymakNetwork\bin\Debug\netstandard2.0\KaymakNetwork.dll</HintPath>
+    </Reference>
+    <Reference Include="NetworkCommsDotNet, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\NetworkCommsDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="ProtobufSerializer">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\ProtobufSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickLZCompressor">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\QuickLZCompressor.dll</HintPath>
+    </Reference>
+    <Reference Include="RemoteProcedureCalls">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\RemoteProcedureCalls.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpZipLibCompressor">
+      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\SharpZipLibCompressor.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AgentConnection.cs" />
+    <Compile Include="AuthPacketProcessors.cs" />
+    <Compile Include="ConsoleHandler.cs" />
+    <Compile Include="DBConnection.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="NetworkConfig.cs" />
+    <Compile Include="PacketParser.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SunCommon\SunCommon.csproj">
+      <Project>{168f62be-a6f5-436d-98f9-a05f57843862}</Project>
+      <Name>SunCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
