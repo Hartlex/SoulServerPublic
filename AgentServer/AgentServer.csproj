@@ -34,44 +34,41 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DistributedFileSystem">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\DistributedFileSystem.dll</HintPath>
+      <HintPath>..\additionalDLLs\DistributedFileSystem.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\additionalDLLs\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="InTheHand.Net.Personal">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\InTheHand.Net.Personal.dll</HintPath>
+      <HintPath>..\additionalDLLs\InTheHand.Net.Personal.dll</HintPath>
     </Reference>
     <Reference Include="JSONSerializer">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\JSONSerializer.dll</HintPath>
+      <HintPath>..\additionalDLLs\JSONSerializer.dll</HintPath>
     </Reference>
     <Reference Include="KaymakNetwork">
-      <HintPath>..\..\..\..\Documents\KaymakNetwork\KaymakNetwork\bin\Debug\netstandard2.0\KaymakNetwork.dll</HintPath>
+      <HintPath>..\additionalDLLs\KaymakNetwork.dll</HintPath>
     </Reference>
     <Reference Include="NetworkCommsDotNet">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\NetworkCommsDotNet.dll</HintPath>
+      <HintPath>..\additionalDLLs\NetworkCommsDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\NLog.dll</HintPath>
+      <HintPath>..\additionalDLLs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\protobuf-net.dll</HintPath>
+      <HintPath>..\additionalDLLs\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="ProtobufSerializer">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\ProtobufSerializer.dll</HintPath>
+      <HintPath>..\additionalDLLs\ProtobufSerializer.dll</HintPath>
     </Reference>
     <Reference Include="QuickLZCompressor">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\QuickLZCompressor.dll</HintPath>
+      <HintPath>..\additionalDLLs\QuickLZCompressor.dll</HintPath>
     </Reference>
     <Reference Include="RemoteProcedureCalls">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\RemoteProcedureCalls.dll</HintPath>
+      <HintPath>..\additionalDLLs\RemoteProcedureCalls.dll</HintPath>
     </Reference>
     <Reference Include="SharpZipLibCompressor">
-      <HintPath>..\..\NetworkComms.Net\ExamplesConsole\bin\Debug\SharpZipLibCompressor.dll</HintPath>
+      <HintPath>..\additionalDLLs\SharpZipLibCompressor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -91,6 +88,7 @@
     <Compile Include="PacketParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorldServerConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

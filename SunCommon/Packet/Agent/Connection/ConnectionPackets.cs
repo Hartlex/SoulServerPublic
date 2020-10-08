@@ -43,29 +43,81 @@ namespace SunCommon
                 //packet.Send(Connection);
             }
         }
-
         public class S2CAnsEnterCharSelect : ConnectionPacket
         {
             private byte[] userID;
             private byte charCount;
             private byte unk2 = 00;
             private byte[] characterInfobytes;
-            public S2CAnsEnterCharSelect(int userID,int charCount,byte[] characterInfobytes) : base(152)
+            public S2CAnsEnterCharSelect(byte[] characterInfobytes) : base(152)
             {
 
-                this.userID = ByteUtils.ToByteArray(userID, 4);
-                this.charCount = (byte)charCount;
-                this.unk2 = this.charCount;
+                //this.userID = ByteUtils.ToByteArray(userID, 4);
+                //this.charCount = (byte)charCount;
+                //this.unk2 = this.charCount;
                 this.characterInfobytes = characterInfobytes;
             }
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(userID, new byte[] {charCount, unk2},characterInfobytes);
+                var sb = GetSendableBytes(characterInfobytes);
                 connection.SendUnmanagedBytes(sb);
             }
         }
+        public class C2SAskEnterGame : ConnectionPacket
+        {
+            public byte unk1;
+            public byte[] charSlotBytes;
+            public byte charSlot;
+            public C2SAskEnterGame(ByteBuffer buffer, Connection connection) : base(31, connection)
+            {
+                unk1 = buffer.ReadByte();
+                charSlotBytes = buffer.ReadBlock(2);
+                charSlot= (byte) (BitConverter.ToInt16(charSlotBytes, 0)/128);
+            }
 
+        }
+        public class S2CAnsEnterGame : ConnectionPacket
+        {
+            public byte[] characterID;
+            public byte[] unk1 = {0,0,0,0};
+            public S2CAnsEnterGame(int characterID) : base(131)
+            {
+                this.characterID = BitConverter.GetBytes(characterID);
+                
+            }
 
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(characterID);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
+        public class C2SAskWorldPrepare : ConnectionPacket
+        {
+            public C2SAskWorldPrepare() : base(223)
+            {
+
+            }
+
+        }
+
+        public class S2CAnsWorldPrepare : ConnectionPacket
+        {
+            private byte[] ip;
+            private byte[] port;
+
+            public S2CAnsWorldPrepare(string worldServerIp, int worldServerPort) : base(21)
+            {
+                ip = ByteUtils.ToByteArray(worldServerIp,32);
+                port = ByteUtils.ToByteArray(worldServerPort, 5);
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(ip, port);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
     }
 }

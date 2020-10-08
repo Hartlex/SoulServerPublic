@@ -79,9 +79,11 @@ namespace DatabaseProxy
 
 
         //}
-        public static Character CreateCharacter(int slot,int userId, string charName, int heightCode, int faceCode, int hairCode, CharacterSetDBEntity set)
+        public static Character CreateCharacter(int slot,int userId, string charName, byte heightCode, byte faceCode, byte hairCode, CharacterSetDBEntity set)
         {
             Character c = new Character();
+            var inv = new Inventory();
+            c.Inventory = inv;
             c.Account = new Account(userId);
             c.Slot = slot;
             c.ClassCode = set.classCode;
@@ -95,7 +97,7 @@ namespace DatabaseProxy
             c.Hp = set.MaxHp;
             c.MaxMp = set.MaxMp;
             c.Mp = set.MaxMp;
-            c.Money = set.money;
+            c.Inventory.Money = set.money;
             c.Experience = set.experience;
             c.PkState = 1;
             c.CharState = 1;
@@ -110,8 +112,8 @@ namespace DatabaseProxy
             };
             c.TitleID = null;
             c.TitleTime = 1;
-            c.InvisOption = 0;
-            c.InventoryLock = 0;
+            c.InvisibleOpt = 0;
+            c.Inventory.InventoryLock = 0;
             c.Inventory = new Inventory
             {
                 InventoryItem = set.inventoryItem,
@@ -133,7 +135,7 @@ namespace DatabaseProxy
             c.Spirit = set.spirit;
             c.SkillStat1 = set.skillStat1;
             c.SkillStat2 = set.skillStat2;
-            c.PlayLimitiedTime = 0;
+            c.PlayLimitedTime = 0;
             c.GuildNickName = null;
             c.CreationDate = DateTime.Now;
             c.ModifiedDate = DateTime.Now;
@@ -212,24 +214,24 @@ namespace DatabaseProxy
 
     public class CharacterSetDBEntity
     {
-        public int charCode, classCode;
+        public byte charCode, classCode;
         public string className;
-        public int level;
+        public short level;
         public int UserPoint;
         public Single MaxHp, MaxMp;
         public long money;
         public int experience;
         public int RemainStat, RemainSkill, selectedStyle, region;
-        public short LocationX, LocationY, LocationZ;
+        public Single LocationX, LocationY, LocationZ;
         public short strength, dexterity, vitality, intelligence, spirit, skillStat1, skillStat2;
-        public byte[] inventoryItem = new byte[0];
-        public byte[] tmpInventoryItem = new byte[0];
-        public byte[] equipItem = new byte[0];
-        public byte[] skill = new byte[0];
-        public byte[] quick = new byte[0];
-        public byte[] style = new byte[0];
-        public byte[] quest = new byte[0];
-        public byte[] mission = new byte[0];
+        public byte[] inventoryItem = { 00 };
+        public byte[] tmpInventoryItem = { 00 };
+        public byte[] equipItem = { 00 };
+        public byte[] skill = { 00 };
+        public byte[] quick = { 00 };
+        public byte[] style = { 00 };
+        public byte[] quest = { 00 };
+        public byte[] mission = { 00 };
 
         public CharacterSetDBEntity(int classCode)
         {
@@ -253,9 +255,9 @@ namespace DatabaseProxy
                     RemainSkill = reader.GetInt32(10);
                     selectedStyle = reader.GetInt32(11);
                     region = reader.GetInt32(12);
-                    LocationX = reader.GetInt16(13);
-                    LocationY = reader.GetInt16(14);
-                    LocationZ = reader.GetInt16(15);
+                    LocationX = reader.GetFloat(13);
+                    LocationY = reader.GetFloat(14);
+                    LocationZ = reader.GetFloat(15);
                     strength = reader.GetInt16(16);
                     dexterity = reader.GetInt16(17);
                     vitality = reader.GetInt16(18);

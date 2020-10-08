@@ -12,10 +12,10 @@ namespace DatabaseProxy
         public static void CreateCharacterPacket(string userIdStr, string charName, string classCodeStr, string heightCodeStr, string faceCodeStr, string hairCodeStr)
         {
             int userID = Int32.Parse(userIdStr);
-            int classCode = Int32.Parse(classCodeStr);
-            int heightCode = Int32.Parse(heightCodeStr);
-            int faceCode = Int32.Parse(faceCodeStr);
-            int hairCode = Int32.Parse(hairCodeStr);
+            byte classCode = Byte.Parse(classCodeStr);
+            byte heightCode = Byte.Parse(heightCodeStr);
+            byte faceCode = Byte.Parse(faceCodeStr);
+            byte hairCode = Byte.Parse(hairCodeStr);
             if (!DatabaseFunctions.CreateCharacter(userID, charName, classCode, heightCode, faceCode, hairCode,
                 out var character)) return;
             if (!DatabaseFunctions.AddCharacterToDB(character, out var charId)) return;
@@ -26,7 +26,7 @@ namespace DatabaseProxy
             Buffer.BlockCopy(sendbytes1, 0, sendbytes, 0, sendbytes1.Length);
             Buffer.BlockCopy(sendbytes2, 0, sendbytes, sendbytes1.Length, sendbytes2.Length);
             AgentConnection.connection.SendObject("CharacterCreateSuccess", sendbytes);
-
+            GetAllCharacters(userID);
 
         }
 
@@ -34,7 +34,8 @@ namespace DatabaseProxy
         {
             if (!DatabaseFunctions.getAllCharacters(userID,out var characterList)) return;
             var returnbytes = new List<byte>();
-            returnbytes.AddRange(ByteUtils.ToByteArray(userID,5));
+            returnbytes.AddRange(ByteUtils.ToByteArray(userID,4));
+            returnbytes.Add((byte)characterList.Count);
             returnbytes.Add((byte)characterList.Count);
             foreach (var characterInfo in characterList)
             {
@@ -42,6 +43,34 @@ namespace DatabaseProxy
             }
 
             AgentConnection.connection.SendObject("CharacterList",returnbytes.ToArray());
+        }
+
+        public static void DeleteCharacter(int userId, int charSlot)
+        {
+            if (DatabaseFunctions.DeleteCharacter(userId, charSlot))
+            {
+                AgentConnection.connection.SendObject("CharacterDeleteSuccess",userId);
+            }
+            else
+            {
+                var errorCode = 0; //TODO implement Errocodes
+                AgentConnection.connection.SendObject("CharacterDeleteFailed",new []{errorCode,userId});
+            }
+        }
+
+        public static void CheckDuplicateName(string name, int userId)
+        {
+            AgentConnection.connection.SendObject(
+                DatabaseFunctions.IsNameFree(name) ? "CheckDuplicateNameSuccess" : "CheckDuplicateNameFailed", userId);
+        }
+
+        public static void GetFullCharacter(int userId, int charSlot)
+        {
+            if (DatabaseFunctions.GetFullCharacter(userId, charSlot,out var fullCharBytes))
+            {
+
+                AgentConnection.connection.SendObject("FullCharacterBytes",fullCharBytes);
+            }
         }
     }
 }
