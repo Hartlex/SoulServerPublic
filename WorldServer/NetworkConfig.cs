@@ -16,7 +16,7 @@ namespace WorldServer
         public static void InitializeNetwork()
         {
             RegisterPacketHandler();
-            StartListening("127.0.0.1", 9000); //Client
+            StartListening("127.0.0.1",8002 ); //Client
             RegisterOnConnectHandler();
         }
         private static void RegisterPacketHandler()

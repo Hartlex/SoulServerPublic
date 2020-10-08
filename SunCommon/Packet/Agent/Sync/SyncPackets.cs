@@ -39,7 +39,7 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(position.GetBytes(), unk1);
+                var sb = GetSendableBytes(position.GetBytes(), unk1);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -57,7 +57,7 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(unk1);
+                var sb = GetSendableBytes(unk1);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -92,14 +92,15 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(unk1);
+                var sb = GetSendableBytes(unk1);
                 connection.SendUnmanagedBytes(sb);
             }
         }
 
         public class C2SAskJumpMovePacket : SyncPacket
         {
-            public C2SAskJumpMovePacket() : base(115)
+
+            public C2SAskJumpMovePacket(ByteBuffer buffer) : base(115)
             {
 
             }

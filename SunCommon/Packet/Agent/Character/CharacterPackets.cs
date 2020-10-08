@@ -82,7 +82,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(BitConverter.GetBytes(code));
+                var sb = GetSendableBytes(BitConverter.GetBytes(code));
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -98,7 +98,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb =getSendableBytes(bytes);
+                var sb =GetSendableBytes(bytes);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -123,7 +123,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes();
+                var sb = GetSendableBytes();
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -138,7 +138,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(BitConverter.GetBytes(errorCode));
+                var sb = GetSendableBytes(BitConverter.GetBytes(errorCode));
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -211,7 +211,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(exp,
+                var sb = GetSendableBytes(exp,
                     remainSkillPoint,
                     remainStatPoint,
                     money,
@@ -244,7 +244,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(unk1);
+                var sb = GetSendableBytes(unk1);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -259,7 +259,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(quickInfo);
+                var sb = GetSendableBytes(quickInfo);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -275,7 +275,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(styleInfo);
+                var sb = GetSendableBytes(styleInfo);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -301,7 +301,7 @@ namespace SunCommon.Packet.Agent.Character
                     slotbytes.AddRange(slot.ToBytes());
                 }
 
-                var sb = getSendableBytes(slotbytes.ToArray());
+                var sb = GetSendableBytes(slotbytes.ToArray());
                 connection.SendUnmanagedBytes(sb);
             }
         }

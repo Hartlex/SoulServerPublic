@@ -20,14 +20,14 @@ namespace SunCommon
         {
             readonly byte[] unk1 = new byte[64];
             readonly byte[] encKey = new byte[4];
-            public S2CHelloPacket(sbyte[] encKey) :base(0) //Call base Constructor with protocolID
+            public S2CHelloPacket(int encKey) :base(0) //Call base Constructor with protocolID
             {
-                Buffer.BlockCopy(encKey,0,this.encKey,0,4);
+                this.encKey = BitConverter.GetBytes(encKey);
             }
 
             public new void Send(Connection connection)
             {
-                var sendableBytes = getSendableBytes(unk1, encKey);
+                var sendableBytes = GetSendableBytes(unk1, encKey);
                 connection.SendUnmanagedBytes(sendableBytes);
             }
         }
@@ -55,7 +55,7 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sendableBytes = getSendableBytes(new[] {success},unk1);
+                var sendableBytes = GetSendableBytes(new[] {success},unk1);
                 connection.SendUnmanagedBytes(sendableBytes);
             }
         }
@@ -114,7 +114,7 @@ namespace SunCommon
             }
             public new void Send(Connection connection)
             {
-                var sendableBytes = getSendableBytes(new[] { success });
+                var sendableBytes = GetSendableBytes(new[] { success });
                 connection.SendUnmanagedBytes(sendableBytes);
             }
         }
@@ -147,7 +147,7 @@ namespace SunCommon
                     allInfo.AddRange(i.getBytes());
                 }
 
-                var sendableBytes = getSendableBytes(new []{serverCount},allInfo.ToArray());
+                var sendableBytes = GetSendableBytes(new []{serverCount},allInfo.ToArray());
                 connection.SendUnmanagedBytes(sendableBytes);
             }
         }
@@ -171,7 +171,7 @@ namespace SunCommon
                     allInfo.AddRange(i.getBytes());
                 }
 
-                var sendableBytes = getSendableBytes(new[] {channelCount}, allInfo.ToArray());
+                var sendableBytes = GetSendableBytes(new[] {channelCount}, allInfo.ToArray());
                 connection.SendUnmanagedBytes(sendableBytes);
 
             }
@@ -221,7 +221,7 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(userID, unk1, agentIPAddress, agentPort);
+                var sb = GetSendableBytes(userID, unk1, agentIPAddress, agentPort);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -252,7 +252,7 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(userID, unk1, agentIPAddress, agentPort,unk2);
+                var sb = GetSendableBytes(userID, unk1, agentIPAddress, agentPort,unk2);
                 connection.SendUnmanagedBytes(sb);
             }
         }

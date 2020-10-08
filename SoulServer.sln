@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldServer", "WorldServer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SunStructs", "SunStructs\SunStructs.csproj", "{71B30B75-9950-45C3-9A03-E55248A527A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterServer", "MasterServer\MasterServer.csproj", "{2C862CE3-FE52-4266-B873-757CB2DF4BBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,18 @@ Global
 		{71B30B75-9950-45C3-9A03-E55248A527A8}.Release|x64.Build.0 = Release|Any CPU
 		{71B30B75-9950-45C3-9A03-E55248A527A8}.Release|x86.ActiveCfg = Release|Any CPU
 		{71B30B75-9950-45C3-9A03-E55248A527A8}.Release|x86.Build.0 = Release|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Debug|x64.Build.0 = Debug|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Debug|x86.Build.0 = Debug|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Release|x64.ActiveCfg = Release|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Release|x64.Build.0 = Release|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Release|x86.ActiveCfg = Release|Any CPU
+		{2C862CE3-FE52-4266-B873-757CB2DF4BBD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

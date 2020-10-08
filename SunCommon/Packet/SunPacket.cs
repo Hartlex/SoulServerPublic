@@ -47,7 +47,7 @@ namespace SunCommon
            //TODO for logging purpose 
         }
 
-        protected virtual byte[] getSendableBytes(params byte[][] attributes)
+        protected virtual byte[] GetSendableBytes(params byte[][] attributes)
         {
             List<byte> sb = new List<byte>();
             sb.Add((byte)Category);
