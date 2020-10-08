@@ -46,6 +46,16 @@ namespace MasterServer
         {
             Server.Restart();
         }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mainServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            groupBox1.Visible=!groupBox1.Visible;
+        }
     }
     public class TextBoxOutputter : TextWriter
     {
