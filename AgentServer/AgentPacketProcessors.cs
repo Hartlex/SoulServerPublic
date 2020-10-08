@@ -54,6 +54,7 @@ namespace AgentServer
             if (!AllPackets.TryGetValue(PacketCategory.AgentConnection, out var connectionActions)) return;
             connectionActions.Add(118,OnC2SAskEnterCharSelect);
             connectionActions.Add(31, OnC2SAskEnterGame);
+            connectionActions.Add(223,OnC2SAskPrepareWorld);
         }
 
 
@@ -131,6 +132,15 @@ namespace AgentServer
 
             var equipInformationPacket = new SyncPackets.S2CAnsEquipInfo(cc.Character);
             equipInformationPacket.Send(connection);
+        }
+
+        private static void OnC2SAskPrepareWorld(ByteBuffer buffer, Connection connection)
+        {
+            var packet = new ConnectionPackets.C2SAskWorldPrepare();
+            string ip = "127.0.0.1";
+            int port = 8002;
+            var outPacket = new ConnectionPackets.S2CAnsWorldPrepare(ip,port);
+            outPacket.Send(connection);
         }
     }
 }

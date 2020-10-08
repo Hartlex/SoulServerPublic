@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KaymakNetwork;
 using NetworkCommsDotNet;
 using NetworkCommsDotNet.Connections;
 using NetworkCommsDotNet.Connections.TCP;
@@ -34,7 +35,12 @@ namespace WorldServer
 
         private static void RegisterAgentPackets()
         {
-
+            connection.AppendIncomingPacketHandler<byte[]>("CharacterAttributeIncrease", (header, conn, content) =>
+            {
+                ByteBuffer buffer = new ByteBuffer(content);
+                var user = BitConverter.ToInt32(buffer.ReadBlock(4), 0);
+                var attributeByte = buffer.ReadByte();
+            });
         }
     }
 }

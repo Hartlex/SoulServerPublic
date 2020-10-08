@@ -43,7 +43,6 @@ namespace SunCommon
                 //packet.Send(Connection);
             }
         }
-
         public class S2CAnsEnterCharSelect : ConnectionPacket
         {
             private byte[] userID;
@@ -61,21 +60,23 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(characterInfobytes);
+                var sb = GetSendableBytes(characterInfobytes);
                 connection.SendUnmanagedBytes(sb);
             }
         }
-
         public class C2SAskEnterGame : ConnectionPacket
         {
+            public byte unk1;
+            public byte[] charSlotBytes;
             public byte charSlot;
-            public C2SAskEnterGame(byte charSlot, Connection connection) : base(31, connection)
+            public C2SAskEnterGame(ByteBuffer buffer, Connection connection) : base(31, connection)
             {
-                this.charSlot = charSlot;
+                unk1 = buffer.ReadByte();
+                charSlotBytes = buffer.ReadBlock(2);
+                charSlot= (byte) (BitConverter.ToInt16(charSlotBytes, 0)/128);
             }
 
         }
-
         public class S2CAnsEnterGame : ConnectionPacket
         {
             public byte[] characterID;
@@ -88,13 +89,35 @@ namespace SunCommon
 
             public new void Send(Connection connection)
             {
-                var sb = getSendableBytes(characterID);
+                var sb = GetSendableBytes(characterID);
                 connection.SendUnmanagedBytes(sb);
             }
         }
+        public class C2SAskWorldPrepare : ConnectionPacket
+        {
+            public C2SAskWorldPrepare() : base(223)
+            {
 
+            }
 
+        }
 
+        public class S2CAnsWorldPrepare : ConnectionPacket
+        {
+            private byte[] ip;
+            private byte[] port;
 
+            public S2CAnsWorldPrepare(string worldServerIp, int worldServerPort) : base(21)
+            {
+                ip = ByteUtils.ToByteArray(worldServerIp,32);
+                port = ByteUtils.ToByteArray(worldServerPort, 5);
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(ip, port);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
     }
 }

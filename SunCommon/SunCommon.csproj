@@ -33,52 +33,42 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DistributedFileSystem, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\DistributedFileSystem.dll</HintPath>
+    <Reference Include="DistributedFileSystem">
+      <HintPath>..\additionalDLLs\DistributedFileSystem.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\additionalDLLs\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\InTheHand.Net.Personal.dll</HintPath>
+    <Reference Include="InTheHand.Net.Personal">
+      <HintPath>..\additionalDLLs\InTheHand.Net.Personal.dll</HintPath>
     </Reference>
-    <Reference Include="JSONSerializer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\JSONSerializer.dll</HintPath>
+    <Reference Include="JSONSerializer">
+      <HintPath>..\additionalDLLs\JSONSerializer.dll</HintPath>
     </Reference>
     <Reference Include="KaymakNetwork">
-      <HintPath>..\..\..\..\Documents\KaymakNetwork\KaymakNetwork\bin\Debug\netstandard2.0\KaymakNetwork.dll</HintPath>
+      <HintPath>..\additionalDLLs\KaymakNetwork.dll</HintPath>
     </Reference>
-    <Reference Include="NetworkCommsDotNet, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\NetworkCommsDotNet.dll</HintPath>
+    <Reference Include="NetworkCommsDotNet">
+      <HintPath>..\additionalDLLs\NetworkCommsDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\additionalDLLs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\protobuf-net.dll</HintPath>
+    <Reference Include="protobuf-net">
+      <HintPath>..\additionalDLLs\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="ProtobufSerializer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\ProtobufSerializer.dll</HintPath>
+    <Reference Include="ProtobufSerializer">
+      <HintPath>..\additionalDLLs\ProtobufSerializer.dll</HintPath>
     </Reference>
-    <Reference Include="QuickLZCompressor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\QuickLZCompressor.dll</HintPath>
+    <Reference Include="QuickLZCompressor">
+      <HintPath>..\additionalDLLs\QuickLZCompressor.dll</HintPath>
     </Reference>
-    <Reference Include="RemoteProcedureCalls, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\RemoteProcedureCalls.dll</HintPath>
+    <Reference Include="RemoteProcedureCalls">
+      <HintPath>..\additionalDLLs\RemoteProcedureCalls.dll</HintPath>
     </Reference>
-    <Reference Include="SharpZipLibCompressor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NetworkComms.Net\Platforms\Net40\MergedDllBuild\bin\Debug\SharpZipLibCompressor.dll</HintPath>
+    <Reference Include="SharpZipLibCompressor">
+      <HintPath>..\additionalDLLs\SharpZipLibCompressor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -105,7 +95,6 @@
     <Compile Include="Packet\Auth\AuthPacket.cs" />
     <Compile Include="Packet\Auth\AuthPackets.cs" />
     <Compile Include="ByteUtils.cs" />
-    <Compile Include="Packet\PacketParser.cs" />
     <Compile Include="Packet\PacketStructs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Packet\SunPacket.cs" />
