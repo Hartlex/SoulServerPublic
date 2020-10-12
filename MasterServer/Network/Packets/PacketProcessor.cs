@@ -9,6 +9,7 @@ using MasterServer.Properties;
 using NetworkCommsDotNet.Connections;
 using SunCommon;
 using SunCommon.Entities;
+using SunCommon.Entities.Item;
 using SunCommon.Packet.Agent.Character;
 using SunCommon.Packet.Agent.CharacterStatus;
 using SunCommon.Packet.Agent.Item;
@@ -76,7 +77,15 @@ namespace MasterServer.Network.Packets
 
         private static void OnC2SAskBuyItem(ByteBuffer buffer, Connection connection)
         {
-            var incPacket = new ItemPackets.OnC2SAskBuyItem(buffer);
+            var incPacket = new ItemPackets.C2SAskBuyItem(buffer);
+            var itemId = NpcShopManager.GetItem(incPacket.unkId1, incPacket.shopPage, incPacket.itemIndex);
+            var itemslotinfo = new List<byte>();
+            itemslotinfo.Add(00);
+            itemslotinfo.AddRange(BitConverter.GetBytes((short)itemId));
+            itemslotinfo.AddRange(new byte[13]);
+            var itemslot = new PacketStructs.ItemSlotInfo(itemslotinfo.ToArray());
+            var outpackt = new ItemPackets.S2CAnsBuyItem(900000,1,new []{itemslot});
+            outpackt.Send(connection);
         }
 
         private static void InitCharacterStatusPackets()
