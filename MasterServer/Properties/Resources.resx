@@ -204,4 +204,7 @@
   <data name="Server_InitializeServerAndChannels_Load" xml:space="preserve">
     <value>Initializing Servers and Channels...</value>
   </data>
+  <data name="ClientManager_Shutdown_Clear" xml:space="preserve">
+    <value>Clearing all Client Connections</value>
+  </data>
 </root>

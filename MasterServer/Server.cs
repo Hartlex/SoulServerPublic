@@ -83,6 +83,7 @@ namespace MasterServer
         internal static void Stop()
         {
             Console.WriteLine(Resources.Server_Stop_Stop);
+            ClientManager.Shutdown();
             NetworkConfig.Stop();
             foreach (var server in servers)
             {

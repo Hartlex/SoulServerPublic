@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -136,6 +137,54 @@ namespace SunCommon
                 destinationPosition = new SunVector(buffer.ReadBlock(16));
             }
 
+        }
+
+        public class C2SSyncNewPositionAfterJump : SyncPacket
+        {
+            public Single x;
+            public Single y;
+            public Single z;
+            public C2SSyncNewPositionAfterJump(ByteBuffer buffer) : base(69)
+            {
+                x = buffer.ReadSingle();
+                y = buffer.ReadSingle();
+                z = buffer.ReadSingle();
+            }
+        }
+
+        public class C2SSyncMoveStop : SyncPacket
+        {
+            public SunVector pos;
+            public C2SSyncMoveStop(ByteBuffer buffer) : base(123)
+            {
+                pos = new SunVector(buffer.ReadBlock(12));
+            }
+        }
+
+        public class S2CSyncAllVillagePlayers : SyncPacket
+        {
+            private byte count;
+            public S2CSyncAllVillagePlayers(byte count) : base(122)
+            {
+                this.count = count;
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(new[] {count});
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
+
+        public class C2SSyncMapTile : SyncPacket
+        {
+            public int MapTileId;
+            public int MapId; 
+            public C2SSyncMapTile(ByteBuffer buffer) : base(96)
+            {
+                MapTileId = buffer.ReadInt32();
+                MapId = buffer.ReadInt32();
+            }
         }
     }
 }

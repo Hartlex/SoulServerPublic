@@ -23,6 +23,7 @@ namespace MasterServer.Clients
         private SunChannel connectedChannel;
         private atZone atZone;
         private Character[] charslots = new Character[6];
+        public uint objectKey;
 
         public Client(Connection authConnection, ShortGuid clientId)
         {

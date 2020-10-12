@@ -106,6 +106,15 @@ namespace MasterServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clearing all Client Connections.
+        /// </summary>
+        internal static string ClientManager_Shutdown_Clear {
+            get {
+                return ResourceManager.GetString("ClientManager_Shutdown_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Client with id: {0} succesfully added!.
         /// </summary>
         internal static string ClientManager_UpdateOrAddClient_ClientAddSuccess {

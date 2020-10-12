@@ -35,9 +35,9 @@
             this.DbCheckBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mainServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MainServerBox = new System.Windows.Forms.GroupBox();
             this.menuStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.MainServerBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // ConsoleOutput
@@ -112,32 +112,32 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.ConsoleOutput);
-            this.groupBox1.Controls.Add(this.DbCheckBox);
-            this.groupBox1.Controls.Add(this.startServerButton);
-            this.groupBox1.Controls.Add(this.restartServerButton);
-            this.groupBox1.Controls.Add(this.stopServerButton);
-            this.groupBox1.Location = new System.Drawing.Point(12, 31);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1225, 592);
-            this.groupBox1.TabIndex = 7;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Main Server";
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            this.MainServerBox.Controls.Add(this.ConsoleOutput);
+            this.MainServerBox.Controls.Add(this.DbCheckBox);
+            this.MainServerBox.Controls.Add(this.startServerButton);
+            this.MainServerBox.Controls.Add(this.restartServerButton);
+            this.MainServerBox.Controls.Add(this.stopServerButton);
+            this.MainServerBox.Location = new System.Drawing.Point(12, 31);
+            this.MainServerBox.Name = "MainServerBox";
+            this.MainServerBox.Size = new System.Drawing.Size(1225, 592);
+            this.MainServerBox.TabIndex = 7;
+            this.MainServerBox.TabStop = false;
+            this.MainServerBox.Text = "Main Server";
+            this.MainServerBox.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1237, 623);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.MainServerBox);
             this.Controls.Add(this.menuStrip1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.MainServerBox.ResumeLayout(false);
+            this.MainServerBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,7 +152,7 @@
         internal System.Windows.Forms.CheckBox DbCheckBox;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mainServerToolStripMenuItem;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox MainServerBox;
     }
 }
 

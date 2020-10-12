@@ -16,9 +16,10 @@ namespace MasterServer.Network.Packets
             var packetSize = buffer.ReadBlock(2);                       //ReadPacketSize
             var packetID = (int)buffer.ReadByte();
             var protocolID = (int)buffer.ReadByte();
-            if (FindPacket(packetID, protocolID, buffer, connection))
+            if (FindPacket(packetID, protocolID, buffer, connection, out var action))
             {
-                Console.WriteLine("Packet from " + connection.ConnectionInfo.RemoteEndPoint + " with ID: " + packetID + "|" + protocolID + " succesfully received and parsed");
+                Console.WriteLine("Packet from "+ connection.ConnectionInfo.RemoteEndPoint+": "+action.Method.Name);
+                //Console.WriteLine("Packet from " + connection.ConnectionInfo.RemoteEndPoint + " with ID: " + packetID + "|" + protocolID + " succesfully received and parsed");
                 return;
             }
             Console.WriteLine("\nReceived unmanaged byte[] ");
@@ -27,9 +28,9 @@ namespace MasterServer.Network.Packets
                 sb.Append(packet[i] + "|");
             Console.WriteLine(sb.ToString());
         }
-        private static bool FindPacket(int packetID, int protocolID, ByteBuffer buffer, Connection connection)
+        private static bool FindPacket(int packetID, int protocolID, ByteBuffer buffer, Connection connection, out Action<ByteBuffer,Connection> action)
         {
-            if (!PacketProcessor.FindPacketAction((PacketCategory)packetID, protocolID, out var action))
+            if (!PacketProcessor.FindPacketAction((PacketCategory)packetID, protocolID, out action))
                 return false;
             LogPacketRecieved(packetID, protocolID, buffer, action.Method.Name);
             action(buffer, connection);

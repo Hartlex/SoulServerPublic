@@ -67,6 +67,8 @@ namespace SunCommon
         AuthPackets = 51,
         AgentConnection = 72,
         AgentCharacter = 165,
-        AgentSync = 253
+        AgentSync = 253,
+        CharacterStatus = 89,
+        Item =33
     }
 }
