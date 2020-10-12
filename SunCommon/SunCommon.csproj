@@ -80,16 +80,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitField.cs" />
     <Compile Include="CCM.cs" />
     <Compile Include="ClientConnection.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Entities\CharacterPosition.cs" />
     <Compile Include="Entities\Inventory.cs" />
+    <Compile Include="Packet\Agent\CharacterStatus\CharacterStatusPacket.cs" />
+    <Compile Include="Packet\Agent\CharacterStatus\CharacterStatusPackets.cs" />
     <Compile Include="Packet\Agent\Character\CharacterPacket.cs" />
     <Compile Include="Packet\Agent\Character\CharacterPackets.cs" />
     <Compile Include="Packet\Agent\Connection\ConnectionPacket.cs" />
     <Compile Include="Packet\Agent\Connection\ConnectionPackets.cs" />
+    <Compile Include="Packet\Agent\Item\ItemPacket.cs" />
+    <Compile Include="Packet\Agent\Item\ItemPackets.cs" />
     <Compile Include="Packet\Agent\Sync\SyncPacket.cs" />
     <Compile Include="Packet\Agent\Sync\SyncPackets.cs" />
     <Compile Include="Packet\Auth\AuthPacket.cs" />
@@ -100,6 +105,8 @@
     <Compile Include="Packet\SunPacket.cs" />
     <Compile Include="TEA.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Parser\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KaymakNetwork;
 using NetworkCommsDotNet.Connections;
+using static SunCommon.PacketStructs;
 
 namespace SunCommon.Packet.Agent.Character
 {
@@ -20,7 +23,8 @@ namespace SunCommon.Packet.Agent.Character
             public int HeightCode;
             public int FaceCode;
             public int HairCode;
-            public C2SAskCreateCharacter(ByteBuffer buffer,Connection connection) : base(111, connection)
+
+            public C2SAskCreateCharacter(ByteBuffer buffer, Connection connection) : base(111, connection)
             {
                 unk1 = buffer.ReadBlock(15);
                 ClassCode = buffer.ReadByte();
@@ -37,6 +41,7 @@ namespace SunCommon.Packet.Agent.Character
                         break;
                     }
                 }
+
                 HeightCode = buffer.ReadByte();
                 FaceCode = buffer.ReadByte();
                 HairCode = buffer.ReadByte();
@@ -47,9 +52,9 @@ namespace SunCommon.Packet.Agent.Character
         {
             public string name;
             private byte unk1;
-            public C2SAskDublicateNameCheck(ByteBuffer buffer,Connection connection) : base(81, connection)
-            {
 
+            public C2SAskDublicateNameCheck(ByteBuffer buffer, Connection connection) : base(81, connection)
+            {
                 var charName = buffer.ReadBlock(16);
 
                 for (int i = 0; i < charName.Length; i++)
@@ -75,6 +80,7 @@ namespace SunCommon.Packet.Agent.Character
         public class S2CAnsDuplicateNameCheck : CharacterPacket
         {
             private int code;
+
             public S2CAnsDuplicateNameCheck(int code, Connection connection) : base(45, connection)
             {
                 this.code = code;
@@ -89,8 +95,9 @@ namespace SunCommon.Packet.Agent.Character
 
         public class S2CAnsCreateCharacter : CharacterPacket
         {
-            public PacketStructs.CharacterInfo character;
+            public CharacterInfo character;
             public byte[] bytes;
+
             public S2CAnsCreateCharacter(byte[] bytes, Connection connection) : base(226, connection)
             {
                 this.bytes = bytes;
@@ -98,7 +105,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public new void Send(Connection connection)
             {
-                var sb =GetSendableBytes(bytes);
+                var sb = GetSendableBytes(bytes);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -106,11 +113,12 @@ namespace SunCommon.Packet.Agent.Character
         public class C2SAskDeleteCharacter : CharacterPacket
         {
             public byte charSlot;
-            public byte[] unk1; 
+            public byte[] unk1;
+
             public C2SAskDeleteCharacter(ByteBuffer buffer, Connection connection) : base(137, connection)
             {
                 charSlot = buffer.ReadByte();
-                unk1 = buffer.ReadBlock(buffer.Data.Length-buffer.Head);
+                unk1 = buffer.ReadBlock(buffer.Data.Length - buffer.Head);
             }
         }
 
@@ -118,7 +126,6 @@ namespace SunCommon.Packet.Agent.Character
         {
             public S2CAnsDeleteCharacter(Connection connection) : base(7, connection)
             {
-
             }
 
             public new void Send(Connection connection)
@@ -131,6 +138,7 @@ namespace SunCommon.Packet.Agent.Character
         public class S2CErrCharacterPacket : CharacterPacket
         {
             private int errorCode;
+
             public S2CErrCharacterPacket(int errorCode, Connection connection) : base(113, connection)
             {
                 this.errorCode = errorCode;
@@ -145,6 +153,7 @@ namespace SunCommon.Packet.Agent.Character
 
         public class S2CCharacterInfo : CharacterPacket
         {
+            private byte[] unk0;
             private byte[] exp;
             private byte[] remainSkillPoint;
             private byte[] remainStatPoint;
@@ -162,56 +171,91 @@ namespace SunCommon.Packet.Agent.Character
             private byte[] titleTime;
             private byte[] inventoryLock;
             private byte[] unk2;
+            private byte[] strength;
+            private byte[] vitality;
+            private byte[] dexterity;
+            private byte[] intelligence;
+            private byte[] spirit;
+            private byte[] skillStat1;
+            private byte[] skillStat2;
+            private byte[] gmAndStateInfo;
+            private byte[] playLimitedTime;
+            private byte[] invisOption;
             private byte[] unk3;
+            private byte[] unk4;
+            private byte[] unk5;
+            private byte[] unk6;
+            private byte[] unk7;
+            private byte[] unk8;
+            private byte[] pkState;
+            private byte[] inventoryExpand;
+
             public S2CCharacterInfo(Entities.Character character) : base(42)
             {
                 exp = BitConverter.GetBytes(character.Experience);
                 remainSkillPoint = BitConverter.GetBytes(character.RemainSkill);
                 remainStatPoint = BitConverter.GetBytes(character.RemainStat);
                 money = BitConverter.GetBytes(character.Inventory.Money);
-                selectedStyle = new byte[]{240,235}; //maybe selected style but 2 bytes maybe ushort
-                maxHp = new byte[]{158,8};  //max hp why 2 bytes if it is float/real in db which is 4 bytes
-                hp = new byte[]{0x3b,0x01}; //hp
-                maxMp = new byte[] {0xc4, 0x03}; //max mp
-                mp = new byte[] {0xda, 0x00}; //mp
-                moveSpeed = BitConverter.GetBytes((short) 101); //add movementSpeed as attribute as short maybe?
-                attackSpeed = BitConverter.GetBytes((short) 152); //Add AttackSpeed as Short
+                selectedStyle = BitConverter.GetBytes((short)character.SelectedStyle);//maybe selected style but 2 bytes maybe ushort
+                maxHp = new byte[] {0, 0}; //max hp calculated by client
+                hp = BitConverter.GetBytes((ushort) character.Hp);
+                maxMp = new byte[] {0, 0}; //max mp calculated by client
+                mp = BitConverter.GetBytes((ushort)character.Mp);
+                moveSpeed = BitConverter.GetBytes((short) 150); //add movementSpeed as attribute as short maybe? calculated by client
+                attackSpeed = BitConverter.GetBytes((short) 152); //Add AttackSpeed as Short calculated by client
                 stateTime = BitConverter.GetBytes(character.StateTime);
-                titleId = new byte[]{00}; //TODO make title a byte depending on next bytes
-                unk1 = new byte[]{00,00};
+                titleId = new byte[16]; //TODO make title a byte depending on next bytes
+                unk1 = new byte[] {00, 01};
                 titleTime = BitConverter.GetBytes(character.TitleTime); // dont know if correct
-                inventoryLock = new []{character.Inventory.InventoryLock};
-                unk2 = new byte[]{00};
-                unk3 = new byte[]
+                inventoryLock = new[] {character.Inventory.InventoryLock};
+                unk2 = new byte[] {00};
+                strength = BitConverter.GetBytes((short)character.Strength);
+                vitality = BitConverter.GetBytes((short)character.Vitality);
+                dexterity = BitConverter.GetBytes((short)character.Dexterity);//TODO test if order is correct
+                intelligence = BitConverter.GetBytes((short)character.Intelligence);
+                spirit = BitConverter.GetBytes((short)character.Spirit);
+                skillStat1 = BitConverter.GetBytes((short)character.SkillStat1);
+                skillStat2 = BitConverter.GetBytes((short) character.SkillStat2);
+                gmAndStateInfo = new byte[]{03, 00};
+                playLimitedTime = BitConverter.GetBytes((int)character.PlayLimitedTime); //TODO check data types
+                invisOption = BitConverter.GetBytes(character.InvisibleOpt);
+                unk3 = ByteUtils.ToByteArray(0, 4);
+                unk4 = new byte[] { 1 }; 
+                unk5 = ByteUtils.ToByteArray("IchHabeEineGilde", 16);
+                unk6 = new byte[] { 1,00,00,00 };
+                inventoryExpand = new byte[]{2}; //1-5
+                unk7 = ByteUtils.ToByteArray("I", 10);
+                pkState = new byte[]{2};
+
+                unk8 = new byte[]
                 {
-                    0x00, 0x00,
-                    0x00, 0x00,
-                    0x01, 0x01,
-                    0x00, 0x00,
-                    0x00, 0x00,
-                    0x00, 0x00,
-                    0x00, 0x00,
+                    //0x00, 0x00, 0x00, 0x00, //unk dword maybe guild guid
+                    //0x00, //? guild ID
+                    //00, 00, 00, 00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                    //0x00, 0x00, 00, 00, 00, 00, //guildname?
+                    //0x00,
+                    //0x00,
+                    //0x01, 0x00,//has guild or guild id
+                    //0x03,
+                    //0x00,  //pkstate 1 orange 2 red
+                    //0x00, 0x00, 0x00, 0x00,
+                    //0x00,
+                    //0x00,
+                    //0x00,
+                    //0x00, 0x00, 0x00, 0x00,
                     0x00,
-
-                    0x14, 0x00,
-                    0x12, 0x00,
-                    0x0f, 0x00,
-                    0x0e, 0x00,
-                    0x0d, 0x00,
-                    0x10, 0x00,
-                    0x10, 0x00,
-
-                    0x00, 0x00, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0xff,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x53, 0x00, 0x35, 0x00, 0x00, 0x00, 0x00
+                    0x00,
+                    0x00, 0x00,
+                    0x00, 0x00,
+                    0x00, 0x00,
+                    0x00, 0x00, // Sd Shield
                 };
-
             }
 
             public new void Send(Connection connection)
             {
-                var sb = GetSendableBytes(exp,
+                var sb = GetSendableBytes(
+                    exp,
                     remainSkillPoint,
                     remainStatPoint,
                     money,
@@ -228,7 +272,20 @@ namespace SunCommon.Packet.Agent.Character
                     titleTime,
                     inventoryLock,
                     unk2,
-                    unk3);
+                    strength,
+                    vitality,
+                    dexterity,
+                    intelligence,
+                    spirit,
+                    skillStat1,
+                    skillStat2,
+                    gmAndStateInfo,
+                    playLimitedTime,
+                    invisOption,
+                    unk3, unk4, unk5, unk6, inventoryExpand,
+                    unk7,
+                    pkState,
+                    unk8);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -236,9 +293,10 @@ namespace SunCommon.Packet.Agent.Character
         public class S2CSkillInfo : CharacterPacket
         {
             private byte[] unk1;
+
             public S2CSkillInfo(Entities.Character character) : base(159)
             {
-                unk1 = new byte[]{0x01,0x00,0xe1,0x2e};
+                unk1 = new byte[] {0x01, 0x00, 0xe1, 0x2e};
                 //TODO probalby the skill byte array
             }
 
@@ -249,9 +307,10 @@ namespace SunCommon.Packet.Agent.Character
             }
         }
 
-        public class S2CQuickInfo:CharacterPacket
+        public class S2CQuickInfo : CharacterPacket
         {
             private byte[] quickInfo;
+
             public S2CQuickInfo(Entities.Character character) : base(190)
             {
                 quickInfo = character.Quick;
@@ -267,10 +326,14 @@ namespace SunCommon.Packet.Agent.Character
         public class S2CStyleInfo : CharacterPacket
         {
             private byte[] styleInfo;
+
             public S2CStyleInfo(Entities.Character character) : base(193)
             {
-                styleInfo = new byte[]{0x21, 0x00, 0x00, 0x00, 0x00, 0x0f,
-                    0x00};
+                styleInfo = new byte[]
+                {
+                    0x21, 0x00, 0x00, 0x00, 0x00, 0x0f,
+                    0x00
+                };
             }
 
             public new void Send(Connection connection)
@@ -283,13 +346,14 @@ namespace SunCommon.Packet.Agent.Character
         public class S2CStatePacket : CharacterPacket
         {
             private byte count;
-            private List<PacketStructs.StateSlotInfo> slots;
+            private List<StateSlotInfo> slots;
+
             public S2CStatePacket(Entities.Character character) : base(219)
             {
                 count = 2; //why only 2
-                slots = new List<PacketStructs.StateSlotInfo>(count);
-                slots.Add(new PacketStructs.StateSlotInfo(new byte[]{0x01,0x00,0xe8,0x03,0x00,0x00}));
-                slots.Add(new PacketStructs.StateSlotInfo(new byte[]{0x02,0x00,0xe8,0x03,0x00,0x00}));
+                slots = new List<StateSlotInfo>(count);
+                slots.Add(new StateSlotInfo(new byte[] {0x01, 0x00, 0xe8, 0x03, 0x00, 0x00}));
+                slots.Add(new StateSlotInfo(new byte[] {0x02, 0x00, 0xe8, 0x03, 0x00, 0x00}));
             }
 
             public new void Send(Connection connection)
@@ -306,6 +370,38 @@ namespace SunCommon.Packet.Agent.Character
             }
         }
 
+        public class C2SAskSelectPlayer : CharacterPacket
+        {
+            public uint objectKey;
+            public byte[] unkKey;
 
+            public C2SAskSelectPlayer(ByteBuffer buffer) : base(51)
+            {
+                this.objectKey = buffer.ReadUInt32();
+                this.unkKey = buffer.ReadBlock(4);
+            }
+        }
+
+        public class S2CAnsSelectPlayer : CharacterPacket
+        {
+            private byte[] objKey;
+            private byte[] hp;
+            private byte[] maxHp;
+            private byte[] level;
+
+            public S2CAnsSelectPlayer(uint objKey, Single hp, Single maxHp, short level) : base(51)
+            {
+                this.objKey = BitConverter.GetBytes(objKey);
+                this.hp = BitConverter.GetBytes(hp);
+                this.maxHp = BitConverter.GetBytes(maxHp);
+                this.level = BitConverter.GetBytes(level);
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(objKey, hp, maxHp, level);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MasterServer.Clients;
 using MasterServer.Network.Packets;
 using NetworkCommsDotNet;
@@ -35,6 +36,8 @@ namespace MasterServer
         private void InitializeSunServer()
         {
             StartListening("127.0.0.1",port);
+            var form1 = (Form1)Application.OpenForms[0];
+            form1.AddServerBox("Etherain",null);
 
         }
 

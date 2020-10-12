@@ -10,6 +10,8 @@ using NetworkCommsDotNet.Connections;
 using SunCommon;
 using SunCommon.Entities;
 using SunCommon.Packet.Agent.Character;
+using SunCommon.Packet.Agent.CharacterStatus;
+using SunCommon.Packet.Agent.Item;
 
 namespace MasterServer.Network.Packets
 {
@@ -46,6 +48,14 @@ namespace MasterServer.Network.Packets
             Dictionary<int, Action<ByteBuffer, Connection>> syncActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
             AllPackets.Add(PacketCategory.AgentSync, syncActions);
             Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.AgentSync.ToString());
+
+            Dictionary<int, Action<ByteBuffer, Connection>> characterStatusActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
+            AllPackets.Add(PacketCategory.CharacterStatus, characterStatusActions);
+            Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.CharacterStatus.ToString());
+
+            Dictionary<int,Action<ByteBuffer,Connection>> itemActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
+            AllPackets.Add(PacketCategory.Item,itemActions);
+            Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.Item.ToString());
         }
 
         private static void InitializeProtocols()
@@ -54,6 +64,40 @@ namespace MasterServer.Network.Packets
             InitConnectionPackets();
             InitCharacterPackets();
             InitSyncPackets();
+            InitCharacterStatusPackets();
+            InitItemPackets();
+        }
+
+        private static void InitItemPackets()
+        {
+            if (!AllPackets.TryGetValue(PacketCategory.Item, out var itemActions)) return;
+            itemActions.Add(149,OnC2SAskBuyItem);
+        }
+
+        private static void OnC2SAskBuyItem(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new ItemPackets.OnC2SAskBuyItem(buffer);
+        }
+
+        private static void InitCharacterStatusPackets()
+        {
+            if (!AllPackets.TryGetValue(PacketCategory.CharacterStatus, out var characterStatusActions)) return;
+            characterStatusActions.Add(60,OnC2SAskAttributeIncrease);
+        }
+
+        private static void OnC2SAskAttributeIncrease(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new CharacterStatusPackets.C2SAskIncreaseAttribute(buffer);
+            var client = ClientManager.GetClient(connection);
+            var character = client.GetSelectedCharacter();
+            client.GetSelectedCharacter().Strength++;
+
+            var outPacket = new CharacterStatusPackets.S2CAnsIncreaseAttribute(
+                client.objectKey,
+                incPacket.attribute,
+                (uint)character.Strength
+                );
+            outPacket.Send(connection);
         }
 
         private static void InitAuthPackets()
@@ -83,8 +127,25 @@ namespace MasterServer.Network.Packets
 
         private static void InitCharacterPackets()
         {
-
+            if (!AllPackets.TryGetValue(PacketCategory.AgentCharacter, out var characterActions)) return;
+            characterActions.Add(51,OnC2SAskSelectPlayer);
         }
+
+        private static void OnC2SAskSelectPlayer(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new CharacterPackets.C2SAskSelectPlayer(buffer);
+            var client = ClientManager.GetClient(connection);
+            var character = client.GetSelectedCharacter();
+            client.objectKey = incPacket.objectKey;
+            var outPacket = new CharacterPackets.S2CAnsSelectPlayer(
+                incPacket.objectKey,
+                character.Hp,
+                character.MaxHp,
+                character.Level
+            );
+            outPacket.Send(connection);
+        }
+
         private static void InitSyncPackets()
         {
             if (!AllPackets.TryGetValue(PacketCategory.AgentSync, out var syncActions)) return;
@@ -92,8 +153,22 @@ namespace MasterServer.Network.Packets
             syncActions.Add(115, OnC2SAskJumpMove);
             syncActions.Add(202, OnC2SAskMouseMove);
             syncActions.Add(43, OnC2SAskKeyboardMove);
+            syncActions.Add(69,OnC2SSyncNewPosition);
+            syncActions.Add(123, OnC2SSyncMoveStop);
+            syncActions.Add(96,OnC2sSyncMaptile);
         }
 
+
+        private static void OnC2SSyncMoveStop(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new SyncPackets.C2SSyncMoveStop(buffer);
+        }
+
+
+        private static void OnC2SSyncNewPosition(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new SyncPackets.C2SSyncNewPositionAfterJump(buffer);
+        }
 
 
         #region authPackets
@@ -219,6 +294,11 @@ namespace MasterServer.Network.Packets
         #endregion
 
         #region SyncPackets
+        private static void OnC2sSyncMaptile(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new SyncPackets.C2SSyncMapTile(buffer);
+
+        }
 
         private static void OnC2SAskEnterWorld(ByteBuffer buffer, Connection connection)
         {
@@ -249,6 +329,7 @@ namespace MasterServer.Network.Packets
         private static void OnC2SAskJumpMove(ByteBuffer buffer, Connection connection)
         {
             var incPacket = new SyncPackets.C2SAskJumpMovePacket(buffer);
+
         }
 
         #endregion

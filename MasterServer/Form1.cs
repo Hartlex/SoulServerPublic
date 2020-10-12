@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -45,6 +46,23 @@ namespace MasterServer
         private void restartServerButton_Click(object sender, EventArgs e)
         {
             Server.Restart();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mainServerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MainServerBox.Visible=!MainServerBox.Visible;
+        }
+
+        public void AddServerBox(string name,List<SunChannel> channels)
+        {
+            var menuItem = new ToolStripMenuItem(name);
+            menuItem.Click += (sender, e) => { };
+            menuStrip1.Items.Add(menuItem);
         }
     }
     public class TextBoxOutputter : TextWriter

@@ -73,8 +73,7 @@ namespace MasterServer.Network
         private static void OnConnect(Connection connection)
         {
             ClientManager.UpdateOrAddClient(connection, out var client);
-            var packet = new AuthPackets.S2CHelloPacket(client.EncryptionKey);
-            packet.Send(connection);
+
             
             //Console.WriteLine(connection.ConnectionInfo.RemoteEndPoint);
             //sbyte[] encKey = ByteUtils.ToSbytes(BitConverter.GetBytes(EncryptionManager.generateEncKey()));

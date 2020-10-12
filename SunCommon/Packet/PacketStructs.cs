@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using SunCommon.Entities;
@@ -57,6 +59,15 @@ namespace SunCommon
                 packet.Add(00);
                 return packet.ToArray();
             }
+        }
+
+        public struct GmAndStateInfo :IBitField
+        {
+            [BitFieldInfo(0, 3)] public short gmState;
+            [BitFieldInfo(3, 1)] public short pcBankUser;
+            [BitFieldInfo(4, 1)] public short condition;
+            [BitFieldInfo(5, 3)] public short pkState;
+            [BitFieldInfo(8, 8)] public short charstate;
         }
 
         public class SunVector

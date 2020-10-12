@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MasterServer.Properties;
 using NetworkCommsDotNet.Connections;
 using NetworkCommsDotNet.Tools;
+using SunCommon;
 
 namespace MasterServer.Clients
 {
@@ -17,9 +18,14 @@ namespace MasterServer.Clients
             Console.WriteLine(Resources.ClientManager_Initialize_Success);
         }
 
+        public static void Shutdown()
+        {
+            Console.WriteLine(Resources.ClientManager_Shutdown_Clear);
+            _connectedClients.Clear();
+        }
+
         public static void UpdateOrAddClient(Connection connection, out Client client)
         {
-            
             var guid = connection.ConnectionInfo.NetworkIdentifier;
             Console.WriteLine(Resources.ClientManager_UpdateOrAddClient_Load + guid);
 
@@ -38,11 +44,14 @@ namespace MasterServer.Clients
                 }
                 _connectedClients[guid].AuthConnection = connection;
                 _connectedClients[guid].setAtZone(atZone.connectedToServer);
+
                 Console.WriteLine(Resources.ClientManager_UpdateOrAddClient_UpdateSuccess, guid);
                 return;
             }
             client = new Client(connection,guid);
             _connectedClients.Add(guid, client);
+            var packet = new AuthPackets.S2CHelloPacket(client.EncryptionKey);
+            packet.Send(connection);
             Console.WriteLine(Resources.ClientManager_UpdateOrAddClient_ClientAddSuccess,guid);
         }
         
