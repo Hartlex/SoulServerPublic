@@ -97,8 +97,14 @@
     </Compile>
     <Compile Include="Network\Encryption\EncryptionManager.cs" />
     <Compile Include="Network\NetworkConfig.cs" />
+    <Compile Include="Network\Packets\Processors\AuthProcessors.cs" />
     <Compile Include="Network\Packets\PacketParser.cs" />
     <Compile Include="Network\Packets\PacketProcessor.cs" />
+    <Compile Include="Network\Packets\Processors\CharacterProcessors.cs" />
+    <Compile Include="Network\Packets\Processors\CharacterStatusProcessors.cs" />
+    <Compile Include="Network\Packets\Processors\ConnectionProcessors.cs" />
+    <Compile Include="Network\Packets\Processors\ItemProcessors.cs" />
+    <Compile Include="Network\Packets\Processors\SyncProcessors.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />

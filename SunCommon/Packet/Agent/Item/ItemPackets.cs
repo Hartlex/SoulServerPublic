@@ -29,11 +29,13 @@ namespace SunCommon.Packet.Agent.Item
         {
             private byte[] money;
             private byte[] invItemCount;
+            private byte[] tmpInvItemCount;
             private byte[] invSlotInfo;
-            public S2CAnsBuyItem(long money, int inventoryItemCount, PacketStructs.ItemSlotInfo[] slots) : base(143)
+            public S2CAnsBuyItem(long money, int inventoryItemCount,int tempInventoryItemCount, PacketStructs.ItemSlotInfo[] slots) : base(143)
             {
                 this.money = BitConverter.GetBytes(money);
-                this.invItemCount = BitConverter.GetBytes(inventoryItemCount);
+                this.invItemCount = new []{(byte)inventoryItemCount};
+                this.tmpInvItemCount = new[] { (byte)tempInventoryItemCount };
                 var info = new List<byte>();
                 for (int i = 0; i < inventoryItemCount; i++)
                 {
@@ -46,9 +48,10 @@ namespace SunCommon.Packet.Agent.Item
 
             public new void Send(Connection connection)
             {
-                var sb = GetSendableBytes(money, invItemCount, invSlotInfo);
+                var sb = GetSendableBytes(money, invItemCount,tmpInvItemCount, invSlotInfo);
                 connection.SendUnmanagedBytes(sb);
             }
         }
+
     }
 }

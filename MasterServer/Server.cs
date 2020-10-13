@@ -10,6 +10,7 @@ using MasterServer.Network;
 using MasterServer.Properties;
 using NetworkCommsDotNet;
 using SunCommon;
+using SunCommon.Entities.Item;
 using SunCommon.Parser;
 
 namespace MasterServer
@@ -24,6 +25,7 @@ namespace MasterServer
             NetworkConfig.Initialize();
             ClientManager.Initialize();
             NpcShopParser.Initialize();
+            ItemManager.Initialize();
             InitializeServersAndChannels();
             Console.WriteLine(Resources.Server_Start_Success);
         }
