@@ -179,9 +179,10 @@ namespace SunCommon.Entities
                     break;
                 }
             }
-            //GuildNickName = Encoding.ASCII.GetString(b.ReadBlock(16));
+            Inventory.SerializeInventoryByteStream();
 
         }
+
 
     }
 

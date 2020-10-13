@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Schema;
 using SunCommon.Entities;
+using SunCommon.Entities.Item;
 
 namespace SunCommon
 {
@@ -61,14 +64,6 @@ namespace SunCommon
             }
         }
 
-        public struct GmAndStateInfo :IBitField
-        {
-            [BitFieldInfo(0, 3)] public short gmState;
-            [BitFieldInfo(3, 1)] public short pcBankUser;
-            [BitFieldInfo(4, 1)] public short condition;
-            [BitFieldInfo(5, 3)] public short pkState;
-            [BitFieldInfo(8, 8)] public short charstate;
-        }
 
         public class SunVector
         {
@@ -225,11 +220,23 @@ namespace SunCommon
             private ItemInfo itemInfo;
             private ItemOptionInfo itemOptionInfo;
 
+            public ItemSlotInfo()
+            {
+                itemInfo = new ItemInfo();
+                itemOptionInfo = new ItemOptionInfo();
+            }
             public ItemSlotInfo(byte[] value)
             {
                 position = value[0];
                 itemInfo = new ItemInfo(ByteUtils.SlicedBytes(value,1,8));
                 itemOptionInfo = new ItemOptionInfo(ByteUtils.SlicedBytes(value,8,value.Length));
+            }
+
+            public ItemSlotInfo(byte position, SunItem item)
+            {
+                this.position = position;
+                this.itemInfo = new ItemInfo(item);
+                this.itemOptionInfo = new ItemOptionInfo(item);
             }
 
             public byte[] ToBytes()
@@ -248,11 +255,24 @@ namespace SunCommon
             private byte durability;
             private byte[] serial;
 
+            public ItemInfo()
+            {
+                code=new byte[2];
+                durability = 0;
+                serial = new byte[4];
+            }
             public ItemInfo(byte[] value)
             {
                 code = ByteUtils.SlicedBytes(value, 0, 2);
                 durability = value[2];
                 serial = ByteUtils.SlicedBytes(value, 3, 7);
+            }
+
+            public ItemInfo(SunItem item)
+            {
+                this.code = BitConverter.GetBytes((ushort) item.itemId);
+                this.durability = (byte) item.Durability;
+                this.serial = new byte[4];//TODO figure this out
             }
 
             public byte[] ToBytes()
@@ -265,24 +285,163 @@ namespace SunCommon
             }
         }
 
+        public struct ItemOptionPart
+        {
+            public ulong BitField1;
+            public ushort BitField2;
+            //public unsafe fixed byte unk1[10];
+            public ulong RankOption1
+            {
+                get => BitManip.Get0to4(BitField1);
+                set => BitField1 = BitManip.Set0to4(BitField1, value);
+            }
+            public ulong RankOption2
+            {
+                get => BitManip.Get5to9(BitField1);
+                set => BitField1 = BitManip.Set5to9(BitField1, value);
+            }
+            public ulong RankOption3
+            {
+                get => BitManip.Get10to14(BitField1);
+                set => BitField1 = BitManip.Set10to14(BitField1, value);
+            }
+            public ulong RankOption4
+            {
+                get => BitManip.Get15to19(BitField1);
+                set => BitField1 = BitManip.Set15to19(BitField1, value);
+            }
+            public ulong RankOption5
+            {
+                get => BitManip.Get20to24(BitField1);
+                set => BitField1 = BitManip.Set20to24(BitField1, value);
+            }
+            public ulong RankOption6
+            {
+                get => BitManip.Get25to29(BitField1);
+                set => BitField1 = BitManip.Set25to29(BitField1, value);
+            }
+            public ulong RankOption7
+            {
+                get => BitManip.Get30to34(BitField1);
+                set => BitField1 = BitManip.Set30to34(BitField1, value);
+            }
+            public ulong RankOption8
+            {
+                get => BitManip.Get35to39(BitField1);
+                set => BitField1 = BitManip.Set35to39(BitField1, value);
+            }
+            public ulong RankOption9
+            {
+                get => BitManip.Get40to44(BitField1);
+                set => BitField1 = BitManip.Set40to44(BitField1, value);
+            }
+            public ulong Rank
+            {
+                get => BitManip.Get45to48(BitField1);
+                set => BitField1 = BitManip.Set45to48(BitField1, value);
+            }
+            public ulong NOption
+            {
+                get => BitManip.Get49to51(BitField1);
+                set => BitField1 = BitManip.Set49to51(BitField1, value);
+            }
+            public ulong Enchant
+            {
+                get => BitManip.Get52to55(BitField1);
+                set => BitField1 = BitManip.Set52to55(BitField1, value);
+            }
+            public ulong SocketNumb
+            {
+                get => BitManip.Get56to57(BitField1);
+                set => BitField1 = BitManip.Set56to57(BitField1, value);
+            }
+            public ulong SocketOption1
+            {
+                get => BitManip.Get58to63(BitField1);
+                set => BitField1 = BitManip.Set58to63(BitField1, value);
+            }
+            public ushort SocketOption2
+            {
+                get => BitManip.Get0to5(BitField2);
+                set => BitField2 = BitManip.Set0to5(BitField2, value);
+            }
+            public ushort SocketOption3
+            {
+                get => BitManip.Get6to11(BitField2);
+                set => BitField2 = BitManip.Set6to11(BitField2, value);
+            }
+            public ushort Set
+            {
+                get => BitManip.Get12to15(BitField2);
+                set => BitField2 = BitManip.Set12to15(BitField2, value);
+            }
+
+            public void setValue(byte[] value)
+            {
+                var v1 = BitConverter.ToUInt64(ByteUtils.SlicedBytes(value, 0, 8),0);
+                var v2 = BitConverter.ToUInt16(ByteUtils.SlicedBytes(value, 9, 10),0);
+                RankOption1 = v1;
+                RankOption2 = v1;
+                RankOption3 = v1;
+                RankOption4 = v1;
+                RankOption5 = v1;
+                RankOption6 = v1;
+                RankOption7 = v1;
+                RankOption8 = v1;
+                RankOption9 = v1;
+                Rank = v1;
+                NOption = v1;
+                Enchant = v1;
+                SocketNumb = v1;
+                SocketOption1 = v1;
+                SocketOption2 = v2;
+                SocketOption3 = v2;
+                Set = v2;
+            }
+
+            public byte[] getValue()
+            {
+                var result = new byte[10];
+                Buffer.BlockCopy(BitConverter.GetBytes(BitField1),0,result,0,8);
+                Buffer.BlockCopy(BitConverter.GetBytes(BitField2),0,result,8,2);
+                return result;
+            }
+
+
+        }
         public class ItemOptionInfo
         {
-            private byte[] unk1 = new byte[]{204,204,204,204,204,204,204,204,204,204};
-            //pretty sure its the values like enchantment and stuff
-            private byte[] bytes8;
-            private byte[] bytes2;
 
+            private byte[] unk1 = new byte[10];
+            //pretty sure its the values like enchantment and stuff
+            //private byte[] bytes8;
+            //private byte[] bytes2;
+            private ItemOptionPart optionPart;
+            public ItemOptionInfo() { }
             public ItemOptionInfo(byte[] value)
             {
-                bytes8= ByteUtils.SlicedBytes(value, 0, 8);
-                bytes2 = ByteUtils.SlicedBytes(value, 8, 11);
+                //bytes8= ByteUtils.SlicedBytes(value, 0, 8);
+                //bytes2 = ByteUtils.SlicedBytes(value, 8, 11);
+                optionPart.setValue(value);
+            }
+
+            public ItemOptionInfo(SunItem item)
+            {
+                byte socketnumb = (byte)item.SocketNum; //TODO make socketnum to byte
+                byte set = (byte)item.SetOptionType;    //TODO make setOptionType to byte
+                //TODO add Socket Options
+                //TODO add Rank Options
+                this.optionPart.SocketNumb = socketnumb;
+                this.optionPart.Set = set;
+
             }
 
             public byte[] ToBytes()
             {
                 List<byte> result = new List<byte>();
-                result.AddRange(bytes8);
-                result.AddRange(bytes2);
+                result.AddRange(optionPart.getValue());
+                //result.AddRange(bytes8);
+                //result.AddRange(bytes2);
                 result.AddRange(unk1);
                 return result.ToArray();
             }
@@ -306,6 +465,14 @@ namespace SunCommon
                 result.AddRange(BitConverter.GetBytes(time));
                 return result.ToArray();
             }
+        }
+
+        public class ItemTotalInfo
+        {
+            public byte equipCount;
+            public byte inventoryCount;
+            public byte tmpInventoryCount;
+            public ItemSlotInfo[] slotsInfos = new ItemSlotInfo[112];
         }
     }
 }
