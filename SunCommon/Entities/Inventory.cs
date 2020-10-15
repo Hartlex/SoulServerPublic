@@ -81,7 +81,7 @@ namespace SunCommon.Entities
 
 
         }
-        public bool AddItemToInv(SunItem item, out ItemSlotInfo slotInfo)
+        public bool AddItemToInv(SunItem item, out ItemSlotInfo slotInfo, int count=1)
         {
             slotInfo = null;
             if (isItemInInventory(item, out var slot))
@@ -92,7 +92,7 @@ namespace SunCommon.Entities
             }
             var slotNum = FindFreeInvSlot();
             if (slotNum == -1) return false;
-            invSlotsInfo[slotNum]=new ItemSlotInfo((byte)slotNum,item,1);
+            invSlotsInfo[slotNum]=new ItemSlotInfo((byte)slotNum,item,(byte)count);
             slotInfo = invSlotsInfo[slotNum];
             inventoryItemCount++;
             return true;

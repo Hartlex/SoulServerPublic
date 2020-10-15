@@ -95,6 +95,7 @@ namespace MasterServer.Network.Packets
             itemActions.Add(57,OnC2SAskItemSplit);
             itemActions.Add(87, OnC2SAskItemMerge);
             itemActions.Add(187,OnC2SAskDeleteItem);
+            itemActions.Add(164,OnC2SAskEnchant);
         }
         private static void InitCharacterStatusPackets()
         {

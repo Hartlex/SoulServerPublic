@@ -200,5 +200,35 @@ namespace SunCommon.Packet.Agent.Item
             }
         }
 
+        public class S2CAskEnchant : ItemPacket
+        {
+            public int money;
+            public byte pos;
+            public byte itemsConsumed;
+
+            public S2CAskEnchant(ByteBuffer buffer) : base(164)
+            {
+                money = buffer.ReadInt32();
+                pos = buffer.ReadByte();
+                itemsConsumed = buffer.ReadByte();
+            }
+        }
+
+        public class S2CAnEnchant : ItemPacket
+        {
+            private byte[] ans;
+
+            public S2CAnEnchant(byte pos, byte enchant):base(129)
+            {
+                ans = new [] {pos};
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes();
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
+
     }
 }

@@ -72,6 +72,9 @@ namespace MasterServer.Network.Packets.Processors
         {
 
             var incPacket =new ItemPackets.C2SAskItemMerge(buffer);
+            var character = ClientManager.GetClient(connection).GetSelectedCharacter();
+            var item = ItemManager.GetItem(4202);
+            character.Inventory.AddItemToInv(item, out var slotInfo, 100);
 
         }
 
@@ -82,6 +85,13 @@ namespace MasterServer.Network.Packets.Processors
             //inv.DeleteItem(incPacket.pos);
             //var outPacket = new ItemPackets.S2CAnsBuyItem(inv.Money,inv.inventoryItemCount, inv.invSlotsInfo);
             //outPacket.Send(connection);
+        }
+
+        internal static void OnC2SAskEnchant(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new ItemPackets.S2CAskEnchant(buffer);
+            var outPacket = new ItemPackets.S2CAnEnchant(incPacket.pos,1);
+            outPacket.Send(connection);
         }
     }
 }
