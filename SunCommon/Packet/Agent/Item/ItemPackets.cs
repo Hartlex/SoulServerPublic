@@ -106,7 +106,7 @@ namespace SunCommon.Packet.Agent.Item
             public byte slotIdTo;
             public byte positionFrom;
             public byte positionTo;
-            public byte unk;
+            public byte amountToMove;
 
             public C2SAskItemMove(ByteBuffer buffer) : base(211)
             {
@@ -114,14 +114,14 @@ namespace SunCommon.Packet.Agent.Item
                 slotIdTo = buffer.ReadByte();
                 positionFrom = buffer.ReadByte();
                 positionTo = buffer.ReadByte();
-                unk = buffer.ReadByte();
+                amountToMove = buffer.ReadByte();
             }
         }
 
         public class S2CAnsItemMove : ItemPacket
         {
             private byte[] ans;
-            public S2CAnsItemMove(byte slotIdFrom, byte slotIdTo, byte posFrom, byte posTo, byte unk) : base(5)
+            public S2CAnsItemMove(byte slotIdFrom, byte slotIdTo, byte posFrom, byte posTo, byte amount) : base(5)
             {
                 ans= new byte[]
                 {
@@ -129,7 +129,7 @@ namespace SunCommon.Packet.Agent.Item
                     slotIdTo,
                     posFrom,
                     posTo,
-                    unk
+                    amount
                 };
             }
 
@@ -139,7 +139,66 @@ namespace SunCommon.Packet.Agent.Item
                 connection.SendUnmanagedBytes(sb);
             }
         }
-        
+
+        public class C2SAskItemSplit : ItemPacket
+        {
+            public byte posFrom;
+            public byte posTo;
+            public byte amountLeft;
+            public byte amountMove;
+
+            public C2SAskItemSplit(ByteBuffer buffer) : base(57)
+            {
+                posFrom = buffer.ReadByte();
+                posTo = buffer.ReadByte();
+                amountLeft = buffer.ReadByte();
+                amountMove = buffer.ReadByte();
+            }
+        }
+
+        public class C2SAskItemMerge : ItemPacket
+        {
+            public byte slotIdFrom;
+            public byte slotIdTo;
+            public byte posFrom;
+            public byte posTo;
+            public byte amount;
+
+            public C2SAskItemMerge(ByteBuffer buffer) : base(87)
+            {
+                slotIdFrom = buffer.ReadByte();
+                slotIdTo = buffer.ReadByte();
+                posFrom = buffer.ReadByte();
+                posTo = buffer.ReadByte();
+                amount = buffer.ReadByte();
+            }
+        }
+
+        public class C2SAskItemDelete : ItemPacket
+        {
+            public byte pos;
+
+            public C2SAskItemDelete(ByteBuffer buffer) : base(187)
+            {
+                pos = buffer.ReadByte();
+            }
+        }
+
+        public class S2CDeleteItem : ItemPacket
+        {
+            public byte[] pos;
+
+            public S2CDeleteItem(byte pos) : base(188)
+            {
+                this.pos = new[] {pos};
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(pos);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
 
     }
 }

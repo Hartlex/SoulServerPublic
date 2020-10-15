@@ -112,11 +112,12 @@ namespace SunCommon.Entities
             return false;
         }
 
-        private int FindFreeInvSlot()
+        private int FindFreeInvSlot(byte slotId=1 )
         {
-            for (int i = 0; i < invSlotsInfo.Length; i++)
+            var slots = GetSlots(slotId);
+            for (int i = 0; i < slots.Length; i++)
             {
-                if (invSlotsInfo[i] == null) return i;
+                if (slots[i] == null) return i;
             }
 
             return -1;
@@ -124,17 +125,77 @@ namespace SunCommon.Entities
 
         public bool MoveItem(byte slotIdFrom, byte slotIdTo, byte positionFrom, byte positionTo, byte unk1)
         {
-            if (!TryGetSlotInfo(positionFrom, GetSlots(slotIdFrom), out var slotFrom)) return false;
-            if (TryGetSlotInfo(positionTo, GetSlots(slotIdTo), out var slotTo))
+            var slots1 = GetSlots(slotIdFrom);
+            var slots2 = GetSlots(slotIdTo);
+
+            var slot1Pos = getArrayPosition(slots1, positionFrom);
+            var slot2Pos = getArrayPosition(slots2, positionTo);
+
+            if (slot2Pos == -1)
             {
-                slotFrom.position = positionTo;
-                slotTo.position = positionFrom;
-                return true;
+                slots1[slot1Pos].position = positionTo;
+                slot2Pos = FindFreeInvSlot(slotIdTo);
+                slots2[slot2Pos] = slots1[slot1Pos];
+                slots1[slot1Pos] = null;
             }
-            slotFrom.position = positionTo;
+            else
+            {
+                slots1[slot1Pos].position = positionTo;
+                slots2[slot2Pos].position = positionFrom;
+
+                var tmp = slots2[slot2Pos];
+                slots2[slot2Pos] = slots1[slot1Pos];
+                slots1[slot1Pos] = tmp;
+            }
+
+            CalculateAllItemCounts();
+
 
             return true;
+            //if (!TryGetSlotInfo(positionFrom, GetSlots(slotIdFrom), out var slotFrom)) return false;
+            //if (TryGetSlotInfo(positionTo, GetSlots(slotIdTo), out var slotTo))
+            //{
+            //    slotFrom.position = positionTo;
+            //    slotTo.position = positionFrom;
+            //    return true;
+            //}
 
+            //slotFrom.position = positionTo;
+
+            //return true;
+
+        }
+
+        private void CalculateAllItemCounts()
+        {
+            inventoryItemCount = CalculateItemCounts(invSlotsInfo);
+            equipItemCount = CalculateItemCounts(equipInfo);
+            tempInventoryItemCount = CalculateItemCounts(tempInventory);
+        }
+        private int CalculateItemCounts(ItemSlotInfo[] slots)
+        {
+            int counter = 0;
+            foreach (var slot in slots)
+            {
+                if (slot != null) counter++;
+            }
+
+            return counter;
+        }
+
+        public bool SplitItem(byte posFrom, byte posTo, byte amountLeft, byte amountMove)
+        {
+            TryGetSlotInfo(posFrom, GetSlots(1), out var orgSlot);
+            
+            var newSlot = new ItemSlotInfo(orgSlot.ToBytes());
+            newSlot.position = posTo;
+            newSlot.itemInfo.itemCount = amountMove;
+            var index = FindFreeInvSlot();
+            GetSlots(1)[index] = newSlot;
+
+            orgSlot.itemInfo.itemCount = amountLeft;
+            inventoryItemCount++;
+            return true;
 
         }
 
@@ -152,6 +213,17 @@ namespace SunCommon.Entities
             return false;
         }
 
+        private int getArrayPosition(ItemSlotInfo[] slots, byte pos)
+        {
+            for (int i = 0; i < slots.Length; i++)
+            {
+                if(slots[i]==null) continue;
+                if ((byte) slots[i].position == pos) return i;
+            }
+
+            return -1;
+        }
+
         private ItemSlotInfo[] GetSlots(byte slotIndex)
         {
             switch (slotIndex)
@@ -163,6 +235,18 @@ namespace SunCommon.Entities
                 default:
                     return null;
             }
+        }
+
+        public bool DeleteItem(byte pos)
+        {
+            for (int i = 0; i < invSlotsInfo.Length; i++)
+            {
+                if (invSlotsInfo[i] == null) continue;
+                if ((byte) invSlotsInfo[i].position == pos) invSlotsInfo[i] = null;
+            }
+            
+            inventoryItemCount--;
+            return true;
         }
     }
 }

@@ -45,11 +45,43 @@ namespace MasterServer.Network.Packets.Processors
         {
             var incPacket = new ItemPackets.C2SAskItemMove(buffer);
             var inv = ClientManager.GetClient(connection).GetSelectedCharacter().Inventory;
-            if (inv.MoveItem(incPacket.slotIdFrom,incPacket.slotIdTo,incPacket.positionFrom,incPacket.positionTo,incPacket.unk))
+            if (inv.MoveItem(incPacket.slotIdFrom,incPacket.slotIdTo,incPacket.positionFrom,incPacket.positionTo,incPacket.amountToMove))
             {
-                var outPacket = new ItemPackets.S2CAnsItemMove(incPacket.slotIdFrom, incPacket.slotIdTo, incPacket.positionFrom, incPacket.positionTo, incPacket.unk);
+                var outPacket = new ItemPackets.S2CAnsItemMove(incPacket.slotIdFrom, incPacket.slotIdTo, incPacket.positionFrom, incPacket.positionTo, incPacket.amountToMove);
                 outPacket.Send(connection);
             }
+        }
+
+        internal static void OnC2SAskItemSplit(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new ItemPackets.C2SAskItemSplit(buffer);
+            var inv = ClientManager.GetClient(connection).GetSelectedCharacter().Inventory;
+
+            if (inv.SplitItem(incPacket.posFrom, incPacket.posTo, incPacket.amountLeft, incPacket.amountMove))
+            {
+                var outPacket = new ItemPackets.S2CAnsItemMove(1,1,incPacket.posFrom,incPacket.posTo,incPacket.amountMove);
+                outPacket.Send(connection);
+            }
+
+
+
+
+        }
+
+        internal static void OnC2SAskItemMerge(ByteBuffer buffer, Connection connection)
+        {
+
+            var incPacket =new ItemPackets.C2SAskItemMerge(buffer);
+
+        }
+
+        internal static void OnC2SAskDeleteItem(ByteBuffer buffer, Connection connection)
+        {
+            //var incPacket = new ItemPackets.C2SAskItemDelete(buffer);
+            //var inv= ClientManager.GetClient(connection).GetSelectedCharacter().Inventory;
+            //inv.DeleteItem(incPacket.pos);
+            //var outPacket = new ItemPackets.S2CAnsBuyItem(inv.Money,inv.inventoryItemCount, inv.invSlotsInfo);
+            //outPacket.Send(connection);
         }
     }
 }

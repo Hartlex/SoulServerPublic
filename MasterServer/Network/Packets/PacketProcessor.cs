@@ -92,6 +92,9 @@ namespace MasterServer.Network.Packets
             if (!AllPackets.TryGetValue(PacketCategory.Item, out var itemActions)) return;
             itemActions.Add(149,OnC2SAskBuyItem);
             itemActions.Add(211,OnC2sAskItemMove);
+            itemActions.Add(57,OnC2SAskItemSplit);
+            itemActions.Add(87, OnC2SAskItemMerge);
+            itemActions.Add(187,OnC2SAskDeleteItem);
         }
         private static void InitCharacterStatusPackets()
         {
