@@ -17,6 +17,7 @@ using static MasterServer.Network.Packets.Processors.AuthProcessors;
 using static MasterServer.Network.Packets.Processors.CharacterProcessors;
 using static MasterServer.Network.Packets.Processors.CharacterStatusProcessors;
 using static MasterServer.Network.Packets.Processors.ConnectionProcessors;
+using static MasterServer.Network.Packets.Processors.InventoryProcessors;
 using static MasterServer.Network.Packets.Processors.ItemProcessors;
 using static MasterServer.Network.Packets.Processors.SyncProcessors;
 
@@ -63,6 +64,10 @@ namespace MasterServer.Network.Packets
             Dictionary<int,Action<ByteBuffer,Connection>> itemActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
             AllPackets.Add(PacketCategory.Item,itemActions);
             Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.Item.ToString());
+
+            Dictionary<int, Action<ByteBuffer, Connection>> inventoryActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
+            AllPackets.Add(PacketCategory.Inventory, inventoryActions);
+            Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.Inventory.ToString());
         }
 
         private static void InitializeProtocols()
@@ -73,12 +78,20 @@ namespace MasterServer.Network.Packets
             InitSyncPackets();
             InitCharacterStatusPackets();
             InitItemPackets();
+            InitInventoryPackets();
+        }
+
+        private static void InitInventoryPackets()
+        {
+            if (!AllPackets.TryGetValue(PacketCategory.Inventory, out var inventoryActions)) return;
+            inventoryActions.Add(68, OnC2SOpenInventory);
         }
 
         private static void InitItemPackets()
         {
             if (!AllPackets.TryGetValue(PacketCategory.Item, out var itemActions)) return;
             itemActions.Add(149,OnC2SAskBuyItem);
+            itemActions.Add(211,OnC2sAskItemMove);
         }
         private static void InitCharacterStatusPackets()
         {
@@ -100,6 +113,7 @@ namespace MasterServer.Network.Packets
             connectionActions.Add(31, OnC2SAskEnterGame);
             connectionActions.Add(223, OnC2SAskPrepareWorld);
             connectionActions.Add(40, OnC2SErrorMessage);
+            connectionActions.Add(216,OnC2SAskBackToCharSelect);
         }
         private static void InitCharacterPackets()
         {

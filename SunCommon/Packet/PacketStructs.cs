@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using NetworkCommsDotNet.Connections.Bluetooth;
 using Newtonsoft.Json.Schema;
 using SunCommon.Entities;
 using SunCommon.Entities.Item;
@@ -67,9 +68,9 @@ namespace SunCommon
 
         public class SunVector
         {
-            private Single x;
-            private Single y;
-            private Single z;
+            public Single x;
+            public Single y;
+            public Single z;
 
             public SunVector(Single x, Single y, Single z)
             {
@@ -216,9 +217,9 @@ namespace SunCommon
 
         public class ItemSlotInfo
         {
-            private int position;
-            private ItemInfo itemInfo;
-            private ItemOptionInfo itemOptionInfo;
+            public int position;
+            public ItemInfo itemInfo;
+            public ItemOptionInfo itemOptionInfo;
 
             public ItemSlotInfo()
             {
@@ -232,10 +233,10 @@ namespace SunCommon
                 itemOptionInfo = new ItemOptionInfo(ByteUtils.SlicedBytes(value,8,value.Length));
             }
 
-            public ItemSlotInfo(byte position, SunItem item)
+            public ItemSlotInfo(byte position, SunItem item, byte itemCount=1)
             {
                 this.position = position;
-                this.itemInfo = new ItemInfo(item);
+                this.itemInfo = new ItemInfo(item,itemCount);
                 this.itemOptionInfo = new ItemOptionInfo(item);
             }
 
@@ -251,40 +252,86 @@ namespace SunCommon
 
         public class ItemInfo
         {
-            private byte[] code;
-            private byte durability;
-            private byte[] serial;
+            public byte[] code;
+            public byte itemCount;
+            public byte[] serial;
 
             public ItemInfo()
             {
                 code=new byte[2];
-                durability = 0;
+                itemCount = 0;
                 serial = new byte[4];
             }
             public ItemInfo(byte[] value)
             {
                 code = ByteUtils.SlicedBytes(value, 0, 2);
-                durability = value[2];
+                itemCount = value[2];
                 serial = ByteUtils.SlicedBytes(value, 3, 7);
             }
 
-            public ItemInfo(SunItem item)
+            public ItemInfo(SunItem item, byte itemCount)
             {
                 this.code = BitConverter.GetBytes((ushort) item.itemId);
-                this.durability = (byte) item.Durability;
-                this.serial = new byte[4];//TODO figure this out
+                this.itemCount =itemCount;
+                this.serial = BitConverter.GetBytes(0); //TODO figure this out
             }
 
             public byte[] ToBytes()
             {
                 List<byte> result = new List<byte>();
                 result.AddRange(code);
-                result.Add(durability);
+                result.Add(itemCount);
                 result.AddRange(serial);
                 return result.ToArray();
             }
         }
 
+        public struct GmAndStateInfo
+        {
+            public ushort BitField1;
+
+            public ushort GmGrade
+            {
+                get => BitManip.Get0to2(BitField1);
+                set => BitField1 = BitManip.Set0to2(BitField1,value);
+            }
+            public ushort PcBangUser
+            {
+                get => BitManip.Get3(BitField1);
+                set => BitField1 = BitManip.Set3(BitField1, value);
+            }
+            public ushort Condition
+            {
+                get => BitManip.Get4(BitField1);
+                set => BitField1 = BitManip.Set4(BitField1, value);
+            }
+            public ushort PkState
+            {
+                get => BitManip.Get5to7(BitField1);
+                set => BitField1 = BitManip.Set5to7(BitField1, value);
+            }
+            public ushort CharState
+            {
+                get => BitManip.Get8to15(BitField1);
+                set => BitField1 = BitManip.Set5to15(BitField1, value);
+            }
+
+            public void setValue(byte[] value)
+            {
+                var v = BitConverter.ToUInt16(value, 0);
+                GmGrade = v;
+                PcBangUser = v;
+                Condition = v;
+                PkState = v;
+                CharState = v;
+
+            }
+
+            public byte[] getValue()
+            {
+                return BitConverter.GetBytes(BitField1);
+            }
+        }
         public struct ItemOptionPart
         {
             public ulong BitField1;
@@ -379,7 +426,7 @@ namespace SunCommon
             public void setValue(byte[] value)
             {
                 var v1 = BitConverter.ToUInt64(ByteUtils.SlicedBytes(value, 0, 8),0);
-                var v2 = BitConverter.ToUInt16(ByteUtils.SlicedBytes(value, 9, 10),0);
+                var v2 = BitConverter.ToUInt16(ByteUtils.SlicedBytes(value, 9, 11),0);
                 RankOption1 = v1;
                 RankOption2 = v1;
                 RankOption3 = v1;
@@ -409,14 +456,15 @@ namespace SunCommon
 
 
         }
+
         public class ItemOptionInfo
         {
 
-            private byte[] unk1 = new byte[10];
+            public byte[] unk1 = new byte[10];
             //pretty sure its the values like enchantment and stuff
             //private byte[] bytes8;
             //private byte[] bytes2;
-            private ItemOptionPart optionPart;
+            public ItemOptionPart optionPart;
             public ItemOptionInfo() { }
             public ItemOptionInfo(byte[] value)
             {
@@ -467,12 +515,51 @@ namespace SunCommon
             }
         }
 
-        public class ItemTotalInfo
+        public class InventoryTotalInfo
         {
-            public byte equipCount;
-            public byte inventoryCount;
-            public byte tmpInventoryCount;
-            public ItemSlotInfo[] slotsInfos = new ItemSlotInfo[112];
+            public byte InvSize;
+            public byte tmpInvSize;
+
+            public ItemSlotInfo[] invslots;
+            public ItemSlotInfo[] tmpInvSlots;
+            public InventoryTotalInfo(ItemSlotInfo[] Invslots, ItemSlotInfo[] tempInvSlots)
+            {
+
+                int invCount=0;
+                for (int i = 0; i < Invslots.Length; i++)
+                {
+                    if (Invslots[i] != null) invCount++;
+                }
+
+                InvSize = (byte) invCount;
+                this.invslots = Invslots;
+
+                int tmpInvCount = 0;
+                for(int i = 0; i < tempInvSlots.Length; i++)
+                {
+                    if (tempInvSlots[i] != null) tmpInvCount++;
+                }
+
+                tmpInvSize = (byte) tmpInvCount;
+                this.tmpInvSlots = tempInvSlots;
+            }
+
+            public byte[] ToBytes()
+            {
+                var result = new List<byte>();
+                result.AddRange(BitConverter.GetBytes((short)InvSize));
+
+                foreach (var slot in invslots)
+                {
+                    if(slot!=null) result.AddRange(slot.ToBytes());
+                }
+
+                foreach (var slot in tmpInvSlots)
+                {
+                    if (slot != null) result.AddRange(slot.ToBytes());
+                }
+                return result.ToArray();
+            }
         }
     }
 }

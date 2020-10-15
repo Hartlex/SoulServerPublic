@@ -390,10 +390,12 @@ namespace MasterServer.Database
 
         public static bool UpdateFullCharacter(Character c)
         {
+            c.Inventory.DeserializeInventoryToByteStream();
             try
             {
                 using (SqlConnection conn = new SqlConnection(DatabaseHelper.GetConnectionString()))
                 {
+                    conn.Open();
                     SqlCommand cmd = new SqlCommand(
                         "UPDATE dbo.[Character] SET " +
                         "[Level] = @Level," +
@@ -403,7 +405,7 @@ namespace MasterServer.Database
                         "[Intelligence] = @Intelligence," +
                         "[Spirit] = @Spirit," +
                         "[SkillStat1] = @SkillStat1," +
-                        "[SkillStat2] = @SkillStat2," +
+                        "[SkilStat2] = @SkillStat2," +
                         "[UserPoint] =@UserPoint," +
                         "[Experience] =@Experience," +
                         "[MaxHp] = @MaxHp," +
@@ -432,7 +434,7 @@ namespace MasterServer.Database
                         "[Style] = @Style," +
                         "[Quest] = @Quest," +
                         "[Mission] =@Mission," +
-                        "[PlayLimitedTime] =@PlayLimitiedTime," +
+                        "[PlayLimitedTime] =@PlayLimitedTime," +
                         "[PVPPoint] = @PVPPoint," +
                         "[PVPScore]=@PVPScore," +
                         "[PVPGrade] =@PVPGrade," +
@@ -446,11 +448,11 @@ namespace MasterServer.Database
                         "[GuildPosition] =@GuildPosition," +
                         "[GuildUserPoint] =@GuildUserPoint," +
                         "[GuildNickName]=@GuildNickName," +
-                        "[CreationDate]=@CreationDate," +
-                        "[ModifiedDate]=@ModifiedDate," +
-                        "[LastDate]=@LastDate," +
+                        //"[CreationDate]=@CreationDate," +
+                        //"[ModifiedDate]=@ModifiedDate," +
+                        //"[LastDate]=@LastDate," +
                         "[DeleteCheck] =@DeleteCheck" +
-                        "WHERE [charID]=@charID",conn
+                        " WHERE [charID]=@charID",conn
                         );
                     #region params
 
@@ -470,7 +472,7 @@ namespace MasterServer.Database
                     cmd.Parameters.Add("@Intelligence", SqlDbType.Int).Value = c.Intelligence;
                     cmd.Parameters.Add("@Spirit", SqlDbType.Int).Value = c.Spirit;
                     cmd.Parameters.Add("@SkillStat1", SqlDbType.Int).Value = c.SkillStat1;
-                    cmd.Parameters.Add("@SkilStat2", SqlDbType.Int).Value = c.SkillStat2;
+                    cmd.Parameters.Add("@SkillStat2", SqlDbType.Int).Value = c.SkillStat2;
                     cmd.Parameters.Add("@UserPoint", SqlDbType.Int).Value = c.UserPoint;
                     cmd.Parameters.Add("@Experience", SqlDbType.BigInt).Value = c.Experience;
                     cmd.Parameters.Add("@MaxHp", SqlDbType.Real).Value = c.MaxHp;
@@ -489,11 +491,12 @@ namespace MasterServer.Database
                     cmd.Parameters.Add("@LocationY", SqlDbType.SmallInt).Value = (short)c.CharacterPosition.LocationY;
 
                     cmd.Parameters.Add("@LocationZ", SqlDbType.SmallInt).Value = (short)c.CharacterPosition.LocationZ;
+                    cmd.Parameters.Add("@TitleID", SqlDbType.VarChar).Value = c.TitleID;
                     cmd.Parameters.Add("@TitleTime", SqlDbType.BigInt).Value = c.TitleTime;
                     cmd.Parameters.Add("@InvisOpt", SqlDbType.TinyInt).Value = c.InvisibleOpt;
                     cmd.Parameters.Add("@InventoryLock", SqlDbType.TinyInt).Value = c.Inventory.InventoryLock;
                     cmd.Parameters.Add("@InventoryItem", SqlDbType.VarBinary).Value = c.Inventory.InventoryItem;
-                    cmd.Parameters.Add("@TmpInvenoryItem", SqlDbType.VarBinary).Value = c.Inventory.TmpInventoryItem;
+                    cmd.Parameters.Add("@TmpInventoryItem", SqlDbType.VarBinary).Value = c.Inventory.TmpInventoryItem;
                     cmd.Parameters.Add("@EquipItem", SqlDbType.VarBinary).Value = c.Inventory.EquipItem;
                     cmd.Parameters.Add("@Skill", SqlDbType.VarBinary).Value = c.Skill;
                     cmd.Parameters.Add("@QuickSkill", SqlDbType.VarBinary).Value = c.Quick;
@@ -515,9 +518,10 @@ namespace MasterServer.Database
                     cmd.Parameters.Add("@GuildID", SqlDbType.Int).Value = c.GuildID;
                     cmd.Parameters.Add("@GuildPosition", SqlDbType.TinyInt).Value = c.GuildPosition;
                     cmd.Parameters.Add("@GuildUserPoint", SqlDbType.Int).Value = c.GuildUserPoint;
-                    cmd.Parameters.Add("@CreatonDate", SqlDbType.SmallDateTime).Value = c.CreationDate;
-                    cmd.Parameters.Add("@ModifiedDate", SqlDbType.SmallDateTime).Value = c.ModifiedDate;
-                    cmd.Parameters.Add("@LastDate", SqlDbType.SmallDateTime).Value = c.LastLoginDate;
+                    cmd.Parameters.Add("@GuildNickName", SqlDbType.VarChar).Value = c.GuildNickName;
+                    //cmd.Parameters.Add("@CreatonDate", SqlDbType.SmallDateTime).Value = c.CreationDate;
+                    //cmd.Parameters.Add("@ModifiedDate", SqlDbType.SmallDateTime).Value = c.ModifiedDate;
+                    //cmd.Parameters.Add("@LastDate", SqlDbType.SmallDateTime).Value = c.LastLoginDate;
                     cmd.Parameters.Add("@DeleteCheck", SqlDbType.TinyInt).Value = c.DeleteCheck;
                     #endregion
 

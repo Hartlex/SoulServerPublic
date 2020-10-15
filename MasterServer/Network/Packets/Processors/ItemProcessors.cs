@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using KaymakNetwork;
 using MasterServer.Clients;
 using NetworkCommsDotNet.Connections;
@@ -20,24 +21,35 @@ namespace MasterServer.Network.Packets.Processors
             var itemId = NpcShopManager.GetItem(incPacket.unkId1, incPacket.shopPage, incPacket.itemIndex);
             var item = ItemManager.GetItem((uint) itemId);
             var character = ClientManager.GetClient(connection).GetSelectedCharacter();
-            var ItemSlotInfo = new PacketStructs.ItemSlotInfo(0,item);
-            character.Inventory.invSlotsInfo[0] = ItemSlotInfo;
-            character.Inventory.Money -= item.ItemSellMoney;
-            //var sb = new List<byte>();
-            //sb.AddRange(new byte[]{01,00}); //invCount and tempInvCount
-            //var slots = new PacketStructs.ItemSlotInfo[95];
-            //for (int i = 0; i < slots.Length; i++)
-            //{
-            //    slots[i]=new PacketStructs.ItemSlotInfo();
-            //}
+            var inv = character.Inventory;
+            character.BuyItem(item);
 
-            //slots[0] = ItemSlotInfo;
-            //foreach (var slot in slots)
-            //{
-            //    sb.AddRange(slot.ToBytes());
-            //}
-            var outPacket = new ItemPackets.S2CAnsBuyItem(character.Inventory.Money, 1,0, character.Inventory.invSlotsInfo);
+
+
+
+
+
+            var invCount = inv.inventoryItemCount;
+            var money = inv.Money;
+            var outPacket = new ItemPackets.S2CAnsBuyItem(money, invCount, character.Inventory.invSlotsInfo);
             outPacket.Send(connection);
+
+            //var ItemSlotInfo = new PacketStructs.ItemSlotInfo(0, item, 1);
+            //character.Inventory.invSlotsInfo[0] = ItemSlotInfo;
+            //character.Inventory.Money -= item.ItemSellMoney;
+            //var outPacket = new ItemPackets.S2CAnsBuyItem(character.Inventory.Money, 1, 0, character.Inventory.invSlotsInfo);
+            //outPacket.Send(connection);
+        }
+
+        internal static void OnC2sAskItemMove(ByteBuffer buffer, Connection connection)
+        {
+            var incPacket = new ItemPackets.C2SAskItemMove(buffer);
+            var inv = ClientManager.GetClient(connection).GetSelectedCharacter().Inventory;
+            if (inv.MoveItem(incPacket.slotIdFrom,incPacket.slotIdTo,incPacket.positionFrom,incPacket.positionTo,incPacket.unk))
+            {
+                var outPacket = new ItemPackets.S2CAnsItemMove(incPacket.slotIdFrom, incPacket.slotIdTo, incPacket.positionFrom, incPacket.positionTo, incPacket.unk);
+                outPacket.Send(connection);
+            }
         }
     }
 }

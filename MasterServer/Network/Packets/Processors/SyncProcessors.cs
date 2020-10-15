@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KaymakNetwork;
 using MasterServer.Clients;
+using MasterServer.Database;
 using NetworkCommsDotNet.Connections;
 using SunCommon;
 
@@ -37,28 +38,38 @@ namespace MasterServer.Network.Packets.Processors
         {
             var incPacket = new SyncPackets.C2SAskKeyboardMovePacket(buffer);
             var client = ClientManager.GetClient(connection);
+            client.GetSelectedCharacter().UpdatePosition(incPacket.currentPosition);
         }
 
         internal static void OnC2SAskMouseMove(ByteBuffer buffer, Connection connection)
         {
             var incPacket = new SyncPackets.C2SAskMouseMove(buffer);
+            var client = ClientManager.GetClient(connection);
+            client.GetSelectedCharacter().UpdatePosition(incPacket.currentPosition);
         }
 
         internal static void OnC2SAskJumpMove(ByteBuffer buffer, Connection connection)
         {
             var incPacket = new SyncPackets.C2SAskJumpMovePacket(buffer);
+            var client = ClientManager.GetClient(connection);
+
+            DatabaseFunctions.UpdateFullCharacter(client.GetSelectedCharacter());
 
         }
 
         internal static void OnC2SSyncMoveStop(ByteBuffer buffer, Connection connection)
         {
             var incPacket = new SyncPackets.C2SSyncMoveStop(buffer);
+            var client = ClientManager.GetClient(connection);
+            client.GetSelectedCharacter().UpdatePosition(incPacket.pos);
         }
 
 
         internal static void OnC2SSyncNewPosition(ByteBuffer buffer, Connection connection)
         {
             var incPacket = new SyncPackets.C2SSyncNewPositionAfterJump(buffer);
+            var client = ClientManager.GetClient(connection);
+            client.GetSelectedCharacter().UpdatePosition(incPacket.pos);
         }
     }
 }

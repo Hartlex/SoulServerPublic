@@ -141,14 +141,10 @@ namespace SunCommon
 
         public class C2SSyncNewPositionAfterJump : SyncPacket
         {
-            public Single x;
-            public Single y;
-            public Single z;
+            public SunVector pos;
             public C2SSyncNewPositionAfterJump(ByteBuffer buffer) : base(69)
             {
-                x = buffer.ReadSingle();
-                y = buffer.ReadSingle();
-                z = buffer.ReadSingle();
+                pos = new SunVector(buffer.ReadBlock(12));
             }
         }
 

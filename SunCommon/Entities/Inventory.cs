@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using SunCommon.Entities.Item;
@@ -12,42 +13,156 @@ namespace SunCommon.Entities
     public class Inventory
     {
         public int Id { get; set; }
-        public long Money { get; set; }
+        public ulong Money { get; set; }
         public byte InventoryLock { get; set; }
         public byte[] InventoryItem { get; set; }
         public byte[] TmpInventoryItem { get; set; }
         public byte[] EquipItem { get; set; }
         public ItemSlotInfo[] invSlotsInfo = new ItemSlotInfo[75];
+        public int inventoryItemCount;
         public ItemSlotInfo[] equipInfo = new ItemSlotInfo[17];
+        public int equipItemCount;
         public ItemSlotInfo[] tempInventory = new ItemSlotInfo[20];
-        
-        public Inventory()
-        {
-            //SerializeInventoryByteStream();
-        }
+        public int tempInventoryItemCount;
 
         public void SerializeInventoryByteStream()
         {
-            var equipCount = EquipItem[0];
-            if (EquipItem.Length != equipCount * 16 + 1) return; //SlotInfo Size
-            for (int i = 0; i < equipCount; i++)
+            equipItemCount = EquipItem[0];
+            if (EquipItem.Length != equipItemCount * 28 + 1) return; //SlotInfo Size
+            for (int i = 0; i < equipItemCount; i++)
             {
-               equipInfo[i]=new ItemSlotInfo(ByteUtils.SlicedBytes(EquipItem,i+1,(i+1)*16+1));
+                equipInfo[i] = new ItemSlotInfo(ByteUtils.SlicedBytes(EquipItem, i*28 + 1, (i + 1) * 28 + 1));
+                
             }
-            var tempInventoryCount = TmpInventoryItem[0];
-            if (TmpInventoryItem.Length != tempInventoryCount * 16 + 1) return; //SlotInfo Size
-            for (int i = 0; i < tempInventoryCount; i++)
+
+            tempInventoryItemCount = TmpInventoryItem[0];
+            if (TmpInventoryItem.Length != tempInventoryItemCount * 28 + 1) return; //SlotInfo Size
+            for (int i = 0; i < tempInventoryItemCount; i++)
             {
-                tempInventory[i] = new ItemSlotInfo(ByteUtils.SlicedBytes(TmpInventoryItem, i + 1, (i + 1) * 16 + 1));
+                tempInventory[i] = new ItemSlotInfo(ByteUtils.SlicedBytes(TmpInventoryItem, i*28 + 1, (i + 1) * 28 + 1));
             }
-            var inventoryCount = InventoryItem[0];
-            if (invSlotsInfo.Length != inventoryCount * 16 + 1) return; //SlotInfo Size
-            for (int i = 0; i < inventoryCount; i++)
+
+            inventoryItemCount = InventoryItem[0];
+            if (InventoryItem.Length != inventoryItemCount * 28 + 1) return; //SlotInfo Size
+            for (int i = 0; i < inventoryItemCount; i++)
             {
-                invSlotsInfo[i] = new ItemSlotInfo(ByteUtils.SlicedBytes(InventoryItem, i + 1, (i + 1) * 16 + 1));
+                invSlotsInfo[i] = new ItemSlotInfo(ByteUtils.SlicedBytes(InventoryItem, i*28 + 1, (i + 1) * 28 + 1));
             }
-            
         }
-        
+
+        public void DeserializeInventoryToByteStream()
+        {
+            var inventoryBytes = new List<byte>();
+            inventoryBytes.Add((byte)inventoryItemCount);
+            foreach (var slotInfo in invSlotsInfo)
+            {
+                if (slotInfo != null) inventoryBytes.AddRange(slotInfo.ToBytes());
+            }
+
+            InventoryItem = inventoryBytes.ToArray();
+
+            var tmpinventoryBytes = new List<byte>();
+            tmpinventoryBytes.Add((byte)tempInventoryItemCount);
+            foreach (var slotInfo in tempInventory)
+            {
+                if (slotInfo != null) tmpinventoryBytes.AddRange(slotInfo.ToBytes());
+            }
+
+            TmpInventoryItem = tmpinventoryBytes.ToArray();
+
+            var equipBytes = new List<byte>();
+            equipBytes.Add((byte)equipItemCount);
+            foreach (var slotInfo in equipInfo)
+            {
+                if (slotInfo != null) equipBytes.AddRange(slotInfo.ToBytes());
+            }
+
+            EquipItem = equipBytes.ToArray();
+
+
+        }
+        public bool AddItemToInv(SunItem item, out ItemSlotInfo slotInfo)
+        {
+            slotInfo = null;
+            if (isItemInInventory(item, out var slot))
+            {
+                slot.itemInfo.itemCount++;
+                slotInfo = slot;
+                return true;
+            }
+            var slotNum = FindFreeInvSlot();
+            if (slotNum == -1) return false;
+            invSlotsInfo[slotNum]=new ItemSlotInfo((byte)slotNum,item,1);
+            slotInfo = invSlotsInfo[slotNum];
+            inventoryItemCount++;
+            return true;
+        }
+        private bool isItemInInventory(SunItem item,out ItemSlotInfo itemSlot)
+        {
+            itemSlot = null;
+            foreach (var slot in invSlotsInfo)
+            {
+                if (slot != null && (uint) BitConverter.ToUInt16(slot.itemInfo.code, 0) == item.itemId)
+                {
+                    itemSlot = slot;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private int FindFreeInvSlot()
+        {
+            for (int i = 0; i < invSlotsInfo.Length; i++)
+            {
+                if (invSlotsInfo[i] == null) return i;
+            }
+
+            return -1;
+        }
+
+        public bool MoveItem(byte slotIdFrom, byte slotIdTo, byte positionFrom, byte positionTo, byte unk1)
+        {
+            if (!TryGetSlotInfo(positionFrom, GetSlots(slotIdFrom), out var slotFrom)) return false;
+            if (TryGetSlotInfo(positionTo, GetSlots(slotIdTo), out var slotTo))
+            {
+                slotFrom.position = positionTo;
+                slotTo.position = positionFrom;
+                return true;
+            }
+            slotFrom.position = positionTo;
+
+            return true;
+
+
+        }
+
+        private bool TryGetSlotInfo(byte pos,ItemSlotInfo[] slots, out ItemSlotInfo slotInfo)
+        {
+            slotInfo = null;
+            foreach (var slot in slots)
+            {
+                if(slot ==null) continue;
+                if ((byte) slot.position != pos) continue;
+                slotInfo = slot;
+                return true;
+            }
+
+            return false;
+        }
+
+        private ItemSlotInfo[] GetSlots(byte slotIndex)
+        {
+            switch (slotIndex)
+            {
+                case 1:
+                    return invSlotsInfo;
+                case 2:
+                    return equipInfo;
+                default:
+                    return null;
+            }
+        }
     }
 }

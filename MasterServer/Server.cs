@@ -83,7 +83,6 @@ namespace MasterServer
             Stop();
             Start();
         }
-
         internal static void Stop()
         {
             Console.WriteLine(Resources.Server_Stop_Stop);
@@ -95,6 +94,8 @@ namespace MasterServer
             }
             NetworkComms.CloseAllConnections();
             NetworkComms.Shutdown();
+            NpcShopManager.Shutdown();
+            ItemManager.Shutdown();
             servers.Clear();
             Console.WriteLine(Resources.Server_Stop_Success);
         }

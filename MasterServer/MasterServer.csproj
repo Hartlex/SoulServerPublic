@@ -103,6 +103,7 @@
     <Compile Include="Network\Packets\Processors\CharacterProcessors.cs" />
     <Compile Include="Network\Packets\Processors\CharacterStatusProcessors.cs" />
     <Compile Include="Network\Packets\Processors\ConnectionProcessors.cs" />
+    <Compile Include="Network\Packets\Processors\InventoryProcessors.cs" />
     <Compile Include="Network\Packets\Processors\ItemProcessors.cs" />
     <Compile Include="Network\Packets\Processors\SyncProcessors.cs" />
     <Compile Include="Program.cs" />

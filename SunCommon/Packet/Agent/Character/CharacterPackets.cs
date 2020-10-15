@@ -179,6 +179,7 @@ namespace SunCommon.Packet.Agent.Character
             private byte[] skillStat1;
             private byte[] skillStat2;
             private byte[] gmAndStateInfo;
+            private GmAndStateInfo gmASInfo;
             private byte[] playLimitedTime;
             private byte[] invisOption;
             private byte[] unk3;
@@ -189,7 +190,7 @@ namespace SunCommon.Packet.Agent.Character
             private byte[] unk8;
             private byte[] pkState;
             private byte[] inventoryExpand;
-
+            private byte[] inventoryInfo;
             public S2CCharacterInfo(Entities.Character character) : base(42)
             {
                 exp = BitConverter.GetBytes(character.Experience);
@@ -216,16 +217,21 @@ namespace SunCommon.Packet.Agent.Character
                 spirit = BitConverter.GetBytes((short)character.Spirit);
                 skillStat1 = BitConverter.GetBytes((short)character.SkillStat1);
                 skillStat2 = BitConverter.GetBytes((short) character.SkillStat2);
-                gmAndStateInfo = new byte[]{03, 00};
+                gmASInfo.GmGrade = 0;
+                gmASInfo.PcBangUser = 0;
+                gmASInfo.Condition = 0;
+                gmASInfo.PkState = character.PkState;
+                gmASInfo.CharState = character.CharState;
+                gmAndStateInfo = gmASInfo.getValue();
                 playLimitedTime = BitConverter.GetBytes((int)character.PlayLimitedTime); //TODO check data types
                 invisOption = BitConverter.GetBytes(character.InvisibleOpt);
                 unk3 = ByteUtils.ToByteArray(0, 4);
-                unk4 = new byte[] { 1 }; 
+                unk4 = new byte[] { 1 };
                 unk5 = ByteUtils.ToByteArray("IchHabeEineGilde", 16);
-                unk6 = new byte[] { 1,00,00,00 };
-                inventoryExpand = new byte[]{2}; //1-5
+                unk6 = new byte[] { 00, 00, 00, 00 };
+                inventoryExpand = new byte[] { 2 }; //1-5
                 unk7 = ByteUtils.ToByteArray("I", 10);
-                pkState = new byte[]{2};
+                pkState = new byte[] { 2 };
 
                 unk8 = new byte[]
                 {
@@ -247,9 +253,12 @@ namespace SunCommon.Packet.Agent.Character
                     0x00,
                     0x00, 0x00,
                     0x00, 0x00,
-                    0x00, 0x00,
-                    0x00, 0x00, // Sd Shield
+                    0x53, 0x00,
+                    0x10, 0x00, // Sd Shield
                 };
+                inventoryInfo = new InventoryTotalInfo(
+                    character.Inventory.invSlotsInfo,
+                    character.Inventory.tempInventory).ToBytes();
             }
 
             public new void Send(Connection connection)
@@ -285,7 +294,8 @@ namespace SunCommon.Packet.Agent.Character
                     unk3, unk4, unk5, unk6, inventoryExpand,
                     unk7,
                     pkState,
-                    unk8);
+                    unk8,
+                    inventoryInfo);
                 connection.SendUnmanagedBytes(sb);
             }
         }

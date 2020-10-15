@@ -102,6 +102,8 @@
     <Compile Include="Packet\Agent\Character\CharacterPackets.cs" />
     <Compile Include="Packet\Agent\Connection\ConnectionPacket.cs" />
     <Compile Include="Packet\Agent\Connection\ConnectionPackets.cs" />
+    <Compile Include="Packet\Agent\Inventory\InventoryPacket.cs" />
+    <Compile Include="Packet\Agent\Inventory\InventoryPackets.cs" />
     <Compile Include="Packet\Agent\Item\ItemPacket.cs" />
     <Compile Include="Packet\Agent\Item\ItemPackets.cs" />
     <Compile Include="Packet\Agent\Sync\SyncPacket.cs" />
