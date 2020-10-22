@@ -191,6 +191,10 @@ namespace SunCommon.Packet.Agent.Character
             private byte[] pkState;
             private byte[] inventoryExpand;
             private byte[] inventoryInfo;
+            private byte[] unkSize;
+            private byte[] sdShield;
+            private byte[] unk9;
+
             public S2CCharacterInfo(Entities.Character character) : base(42)
             {
                 exp = BitConverter.GetBytes(character.Experience);
@@ -217,45 +221,55 @@ namespace SunCommon.Packet.Agent.Character
                 spirit = BitConverter.GetBytes((short)character.Spirit);
                 skillStat1 = BitConverter.GetBytes((short)character.SkillStat1);
                 skillStat2 = BitConverter.GetBytes((short) character.SkillStat2);
-                gmASInfo.GmGrade = 0;
-                gmASInfo.PcBangUser = 0;
-                gmASInfo.Condition = 0;
-                gmASInfo.PkState = character.PkState;
-                gmASInfo.CharState = character.CharState;
-                gmAndStateInfo = gmASInfo.getValue();
+                //gmASInfo.GmGrade = 8;
+                //gmASInfo.PcBangUser = 0;
+                //gmASInfo.Condition = 0;
+                //gmASInfo.PkState = character.PkState;
+                //gmASInfo.CharState = character.CharState;
+                //gmAndStateInfo = gmASInfo.getValue();
+                gmAndStateInfo = new byte[]{00,00};
                 playLimitedTime = BitConverter.GetBytes((int)character.PlayLimitedTime); //TODO check data types
                 invisOption = BitConverter.GetBytes(character.InvisibleOpt);
-                unk3 = ByteUtils.ToByteArray(0, 4);
-                unk4 = new byte[] { 1 };
-                unk5 = ByteUtils.ToByteArray("IchHabeEineGilde", 16);
-                unk6 = new byte[] { 00, 00, 00, 00 };
-                inventoryExpand = new byte[] { 2 }; //1-5
-                unk7 = ByteUtils.ToByteArray("I", 10);
-                pkState = new byte[] { 2 };
+
 
                 unk8 = new byte[]
                 {
-                    //0x00, 0x00, 0x00, 0x00, //unk dword maybe guild guid
-                    //0x00, //? guild ID
-                    //00, 00, 00, 00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    //0x00, 0x00, 00, 00, 00, 00, //guildname?
-                    //0x00,
-                    //0x00,
-                    //0x01, 0x00,//has guild or guild id
-                    //0x03,
-                    //0x00,  //pkstate 1 orange 2 red
-                    //0x00, 0x00, 0x00, 0x00,
-                    //0x00,
-                    //0x00,
-                    //0x00,
-                    //0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00, //unk dword maybe guild guid
+                    0x00, //? guild ID
+
+                    00, 00, 00, 00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 00, 00, 00, 00, //guildname?
+
+                    0x00,
+                    0x00,
+
+                    0x01, 0x00,//has guild or guild id
+                    0x01,   //pkstate 1 orange 2 red
+                    0x03,   //inv Expand
+
+                    0x00, 0x00, 0x00, 0x00,
+                    0x00,
+                    0x00,
+                    0x00,
+                    0x00, 0x00, 0x00, 0x00,
                     0x00,
                     0x00,
                     0x00, 0x00,
                     0x00, 0x00,
-                    0x53, 0x00,
-                    0x10, 0x00, // Sd Shield
+                    //0x53, 0x00,
+                    //0x10, 0x00, // Sd Shield
                 };
+
+                unk9= BitConverter.GetBytes((ushort)51);
+                sdShield = BitConverter.GetBytes((short)1000);
+                //unkSize = BitConverter.GetBytes((short)(5 * character.Inventory.InventoryItem[0]+1));
+                //unkSize = BitConverter.GetBytes((short) 11); //num of slots*5 +1
+                //inventoryInfo= new byte[]
+                //{
+                //    02,
+                //    0,161,15,1,100,
+                //    1,162,15,2,0
+                //};
                 inventoryInfo = new InventoryTotalInfo(
                     character.Inventory.invSlotsInfo,
                     character.Inventory.tempInventory).ToBytes();
@@ -291,10 +305,13 @@ namespace SunCommon.Packet.Agent.Character
                     gmAndStateInfo,
                     playLimitedTime,
                     invisOption,
-                    unk3, unk4, unk5, unk6, inventoryExpand,
-                    unk7,
-                    pkState,
+                    //unk3, unk4, unk5, unk6, inventoryExpand,
+                    //unk7,
+                    //pkState,
                     unk8,
+                    unk9,
+                    sdShield,
+                    //unkSize,
                     inventoryInfo);
                 connection.SendUnmanagedBytes(sb);
             }

@@ -24,7 +24,7 @@ namespace SunCommon.Packet.Agent.CharacterStatus
             private byte[] objKey;
             private byte[] attribute;
             private byte[] newValue;
-            public S2CAnsIncreaseAttribute(uint objKey, byte attribute, uint resultValue) : base(125)
+            public S2CAnsIncreaseAttribute(int objKey, byte attribute, int resultValue) : base(125)
             {
                 this.objKey = BitConverter.GetBytes(objKey);
                 this.attribute = new []{attribute};

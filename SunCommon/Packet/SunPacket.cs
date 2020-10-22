@@ -70,6 +70,8 @@ namespace SunCommon
         AgentSync = 253,
         CharacterStatus = 89,
         Item =33,
-        Inventory=101
+        Inventory=101,
+        Zone =111,
+        Battle =60
     }
 }

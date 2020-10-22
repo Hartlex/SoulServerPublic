@@ -16,6 +16,7 @@ namespace SunCommon.Packet.Agent.Item
             public int unkId2; //npc id same as shop id
             public byte shopPage;
             public short itemIndex;
+
             public C2SAskBuyItem(ByteBuffer buffer) : base(149)
             {
                 unkId1 = buffer.ReadInt32();
@@ -30,6 +31,7 @@ namespace SunCommon.Packet.Agent.Item
             private byte[] money;
             private byte[] invItemCount;
             private byte[] invSlotInfo;
+
             public S2CAnsBuyItem(ulong money, int inventoryItemCount, PacketStructs.ItemSlotInfo[] slots) : base(143)
             {
                 this.money = BitConverter.GetBytes(money);
@@ -37,9 +39,8 @@ namespace SunCommon.Packet.Agent.Item
                 var info = new List<byte>();
                 for (int i = 0; i < 75; i++)
                 {
-                    if(slots[i]!=null)
+                    if (slots[i] != null)
                         info.AddRange(slots[i].ToBytes());
-                    
                 }
 
                 invSlotInfo = info.ToArray();
@@ -55,6 +56,7 @@ namespace SunCommon.Packet.Agent.Item
         public class C2SAskDeleteItem : ItemPacket
         {
             public byte index;
+
             public C2SAskDeleteItem(ByteBuffer buffer) : base(187)
             {
                 this.index = buffer.ReadByte();
@@ -65,6 +67,7 @@ namespace SunCommon.Packet.Agent.Item
         {
             public byte unk1;
             public byte index;
+
             public C2SAskUseItem(ByteBuffer buffer) : base(35)
             {
                 this.unk1 = buffer.ReadByte();
@@ -86,13 +89,13 @@ namespace SunCommon.Packet.Agent.Item
                 index = buffer.ReadByte();
                 unk3 = buffer.ReadBlock(2);
             }
-
         }
 
         public class C2SAskItemToQuickSlot : ItemPacket
         {
             public byte invIndex;
             public byte quickIndex;
+
             public C2SAskItemToQuickSlot(ByteBuffer buffer) : base(59)
             {
                 invIndex = buffer.ReadByte();
@@ -121,9 +124,10 @@ namespace SunCommon.Packet.Agent.Item
         public class S2CAnsItemMove : ItemPacket
         {
             private byte[] ans;
+
             public S2CAnsItemMove(byte slotIdFrom, byte slotIdTo, byte posFrom, byte posTo, byte amount) : base(5)
             {
-                ans= new byte[]
+                ans = new byte[]
                 {
                     slotIdFrom,
                     slotIdTo,
@@ -218,9 +222,9 @@ namespace SunCommon.Packet.Agent.Item
         {
             private byte[] ans;
 
-            public S2CAnEnchant(byte pos, byte enchant):base(129)
+            public S2CAnEnchant(byte pos, byte enchant) : base(129)
             {
-                ans = new [] {pos};
+                ans = new[] {pos};
             }
 
             public new void Send(Connection connection)
@@ -230,5 +234,58 @@ namespace SunCommon.Packet.Agent.Item
             }
         }
 
+        public class C2SAskItemBind : ItemPacket
+        {
+            public byte pos;
+
+            public C2SAskItemBind(ByteBuffer buffer) : base(190)
+            {
+                this.pos = buffer.ReadByte();
+            }
+        }
+
+        public class S2CAnsItemBind : ItemPacket
+        {
+            private byte[] pos;
+
+            public S2CAnsItemBind(byte pos) : base(191)
+            {
+                this.pos = new byte[] {pos};
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(pos);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
+
+        public class C2SAskItemDrop : ItemPacket
+        {
+            public byte slotIndex;
+            public byte pos;
+
+            public C2SAskItemDrop(ByteBuffer buffer) : base(63)
+            {
+                slotIndex = buffer.ReadByte();
+                pos = buffer.ReadByte();
+            }
+        }
+
+        public class S2CAnsItemDrop : ItemPacket
+        {
+            private byte[] ans;
+
+            public S2CAnsItemDrop(byte slotIndex, byte pos) : base(19)
+            {
+                ans = new []{slotIndex,pos};
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(ans);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
     }
 }

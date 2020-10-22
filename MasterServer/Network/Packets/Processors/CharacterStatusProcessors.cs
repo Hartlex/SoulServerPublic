@@ -20,9 +20,9 @@ namespace MasterServer.Network.Packets.Processors
             client.GetSelectedCharacter().Strength++;
 
             var outPacket = new CharacterStatusPackets.S2CAnsIncreaseAttribute(
-                client.objectKey,
+                client.UserId,
                 incPacket.attribute,
-                (uint)character.Strength
+                1000
             );
             outPacket.Send(connection);
         }

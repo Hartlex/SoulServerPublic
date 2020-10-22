@@ -32,7 +32,7 @@ namespace MasterServer.Network.Packets.Processors
                 var outPacket = new ConnectionPackets.S2CAnsEnterCharSelect(bytes.ToArray());
                 outPacket.Send(connection);
 
-                var outPacket2 = new ConnectionPackets.S2CWorldPrepareCMD();
+                var outPacket2 = new ConnectionPackets.S2CAnsWorldPrepare("127.0.0.1",8010);
                 outPacket2.Send(connection);
 
             }
@@ -61,7 +61,7 @@ namespace MasterServer.Network.Packets.Processors
             var stateInfoPacket = new CharacterPackets.S2CStatePacket(character);
             stateInfoPacket.Send(connection);
 
-            var packet = new ConnectionPackets.S2CAnsEnterGame(character.Id);
+            var packet = new ConnectionPackets.S2CAnsEnterGame(client.UserId);
             packet.Send(connection);
 
         }

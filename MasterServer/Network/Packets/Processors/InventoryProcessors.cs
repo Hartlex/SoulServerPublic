@@ -18,7 +18,7 @@ namespace MasterServer.Network.Packets.Processors
             var incPacket = new InventoryPackets.C2SOpenInventory();
             var inventory = ClientManager.GetClient(connection).GetSelectedCharacter().Inventory;
             var outPacket = new ItemPackets.S2CAnsBuyItem(inventory.Money,inventory.inventoryItemCount,inventory.invSlotsInfo);
-            outPacket.Send(connection);
+            //outPacket.Send(connection);
         }
     }
 }

@@ -28,7 +28,8 @@ namespace MasterServer.Network.Packets.Processors
             var success = DatabaseFunctions.UserLogin(incPacket.Username, incPacket.DecPassword, out var userID);
             if (success)
             {
-                ClientManager.GetClient(connection).UserId = userID;
+                //ClientManager.GetClient(connection).UserId = userID;
+                ClientManager.GetClient(connection).UserId = 33;
                 ClientManager.GetClient(connection).setAtZone(atZone.afterLogin);
             }
             var outPacket = new AuthPackets.S2CAnsLogin(success);

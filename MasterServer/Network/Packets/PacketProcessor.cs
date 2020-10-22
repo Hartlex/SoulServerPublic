@@ -14,12 +14,14 @@ using SunCommon.Packet.Agent.Character;
 using SunCommon.Packet.Agent.CharacterStatus;
 using SunCommon.Packet.Agent.Item;
 using static MasterServer.Network.Packets.Processors.AuthProcessors;
+using static MasterServer.Network.Packets.Processors.BattleProcessors;
 using static MasterServer.Network.Packets.Processors.CharacterProcessors;
 using static MasterServer.Network.Packets.Processors.CharacterStatusProcessors;
 using static MasterServer.Network.Packets.Processors.ConnectionProcessors;
 using static MasterServer.Network.Packets.Processors.InventoryProcessors;
 using static MasterServer.Network.Packets.Processors.ItemProcessors;
 using static MasterServer.Network.Packets.Processors.SyncProcessors;
+using static MasterServer.Network.Packets.Processors.ZoneProcessors;
 
 namespace MasterServer.Network.Packets
 {
@@ -68,6 +70,14 @@ namespace MasterServer.Network.Packets
             Dictionary<int, Action<ByteBuffer, Connection>> inventoryActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
             AllPackets.Add(PacketCategory.Inventory, inventoryActions);
             Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.Inventory.ToString());
+            
+            Dictionary<int, Action<ByteBuffer, Connection>> zoneActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
+            AllPackets.Add(PacketCategory.Zone, zoneActions);
+            Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.Zone.ToString());
+
+            Dictionary<int, Action<ByteBuffer, Connection>> battleActions = new Dictionary<int, Action<ByteBuffer, Connection>>();
+            AllPackets.Add(PacketCategory.Battle, battleActions);
+            Console.WriteLine(Resources.PacketProcessor_InitializeCategories__load, PacketCategory.Battle.ToString());
         }
 
         private static void InitializeProtocols()
@@ -79,6 +89,14 @@ namespace MasterServer.Network.Packets
             InitCharacterStatusPackets();
             InitItemPackets();
             InitInventoryPackets();
+            InitZonePackets();
+            InitBattlePackets();
+        }
+
+        private static void InitBattlePackets()
+        {
+            if (!AllPackets.TryGetValue(PacketCategory.Battle, out var battleActions)) return;
+            battleActions.Add(12, OnC2SAskPlayerAttack);
         }
 
         private static void InitInventoryPackets()
@@ -96,6 +114,14 @@ namespace MasterServer.Network.Packets
             itemActions.Add(87, OnC2SAskItemMerge);
             itemActions.Add(187,OnC2SAskDeleteItem);
             itemActions.Add(164,OnC2SAskEnchant);
+            itemActions.Add(190,OnC2SAskItemBind);
+            itemActions.Add(63,OnC2SaskItemDrop);
+        }
+
+        private static void InitZonePackets()
+        {
+            if (!AllPackets.TryGetValue(PacketCategory.Zone, out var zoneActions)) return;
+            zoneActions.Add(204,OnC2SAskMapMove);
         }
         private static void InitCharacterStatusPackets()
         {

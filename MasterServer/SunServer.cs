@@ -44,6 +44,7 @@ namespace MasterServer
         public void Shutdown()
         {
             Connection.StopListening(listener);
+            NetworkComms.Shutdown();
             foreach (var channel in channels)
             {
                 channel.Value.Shutdown();

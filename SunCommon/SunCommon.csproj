@@ -96,6 +96,12 @@
     <Compile Include="Entities\Item\Shop\NpcShopManager.cs" />
     <Compile Include="Entities\Item\Shop\NpcShopTab.cs" />
     <Compile Include="Entities\Item\SunItem.cs" />
+    <Compile Include="Entities\Map\MapManager.cs" />
+    <Compile Include="Entities\Map\Portal.cs" />
+    <Compile Include="Entities\Map\PortalManager.cs" />
+    <Compile Include="Entities\Map\SunMap.cs" />
+    <Compile Include="Packet\Agent\Battle\BattlePacket.cs" />
+    <Compile Include="Packet\Agent\Battle\BattlePackets.cs" />
     <Compile Include="Packet\Agent\CharacterStatus\CharacterStatusPacket.cs" />
     <Compile Include="Packet\Agent\CharacterStatus\CharacterStatusPackets.cs" />
     <Compile Include="Packet\Agent\Character\CharacterPacket.cs" />
@@ -108,10 +114,13 @@
     <Compile Include="Packet\Agent\Item\ItemPackets.cs" />
     <Compile Include="Packet\Agent\Sync\SyncPacket.cs" />
     <Compile Include="Packet\Agent\Sync\SyncPackets.cs" />
+    <Compile Include="Packet\Agent\Zone\ZonePacket.cs" />
+    <Compile Include="Packet\Agent\Zone\ZonePackets.cs" />
     <Compile Include="Packet\Auth\AuthPacket.cs" />
     <Compile Include="Packet\Auth\AuthPackets.cs" />
     <Compile Include="ByteUtils.cs" />
     <Compile Include="Packet\PacketStructs.cs" />
+    <Compile Include="Parser\MapPortalParser.cs" />
     <Compile Include="Parser\NpcShopParser.cs" />
     <Compile Include="Parser\SunItemParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

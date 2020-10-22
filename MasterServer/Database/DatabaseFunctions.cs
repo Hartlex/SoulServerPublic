@@ -33,6 +33,7 @@ namespace MasterServer.Database
         }
         public static bool getAllCharacters(int userID, out List<PacketStructs.CharacterInfo> characterInfos)
         {
+            userID = 2;
             characterInfos = new List<PacketStructs.CharacterInfo>();
             using (SqlConnection conn = new SqlConnection(DatabaseHelper.GetConnectionString()))
             {
@@ -66,6 +67,7 @@ namespace MasterServer.Database
         }
         public static bool GetFullCharacter(int userId, int charSlot, out byte[] fullCharBytes)
         {
+            userId = 2;
             fullCharBytes = null;
             using (SqlConnection conn = new SqlConnection(DatabaseHelper.GetConnectionString()))
             {

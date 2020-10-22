@@ -32,7 +32,10 @@ namespace SunCommon.Entities
             for (int i = 0; i < equipItemCount; i++)
             {
                 equipInfo[i] = new ItemSlotInfo(ByteUtils.SlicedBytes(EquipItem, i*28 + 1, (i + 1) * 28 + 1));
-                
+                if (equipInfo[i].position == 0)
+                {
+                    //equipInfo[i].itemInfo.serial = new byte[] { 10, 0, 0, 0 };
+                }
             }
 
             tempInventoryItemCount = TmpInventoryItem[0];
@@ -47,6 +50,10 @@ namespace SunCommon.Entities
             for (int i = 0; i < inventoryItemCount; i++)
             {
                 invSlotsInfo[i] = new ItemSlotInfo(ByteUtils.SlicedBytes(InventoryItem, i*28 + 1, (i + 1) * 28 + 1));
+                if (invSlotsInfo[i].position == 0)
+                {
+                    //invSlotsInfo[i].itemInfo.serial=new byte[]{10,0,0,0};
+                }
             }
         }
 
@@ -213,7 +220,7 @@ namespace SunCommon.Entities
             return false;
         }
 
-        private int getArrayPosition(ItemSlotInfo[] slots, byte pos)
+        public int getArrayPosition(ItemSlotInfo[] slots, byte pos)
         {
             for (int i = 0; i < slots.Length; i++)
             {

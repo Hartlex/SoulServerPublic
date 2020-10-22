@@ -21,6 +21,7 @@ namespace MasterServer.Network.Packets.Processors
             var client = ClientManager.GetClient(connection);
             var character = client.GetSelectedCharacter();
             client.objectKey = incPacket.objectKey;
+            client.objectKey2 = BitConverter.ToUInt32(incPacket.unkKey,0);
             var outPacket = new CharacterPackets.S2CAnsSelectPlayer(
                 incPacket.objectKey,
                 character.Hp,

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using KaymakNetwork;
 using MasterServer.Properties;
 using NetworkCommsDotNet.Connections;
 using NetworkCommsDotNet.Tools;
 using SunCommon;
+using MasterServer.Network.Packets.Processors;
 
 namespace MasterServer.Clients
 {
@@ -41,6 +44,13 @@ namespace MasterServer.Clients
                     case atZone.atCharSelect:
                         client.ChannelConnection = connection;
                         return;
+                    case atZone.atVillage:
+                        client.setAtZone(atZone.connectedToServer);
+                        client.AuthConnection = connection;
+                        var packet1 = new AuthPackets.S2CAnsConnect(true);
+                        packet1.Send(connection);
+                        return;
+                        
                 }
                 _connectedClients[guid].AuthConnection = connection;
                 _connectedClients[guid].setAtZone(atZone.connectedToServer);
