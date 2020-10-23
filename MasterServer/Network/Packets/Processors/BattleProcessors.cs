@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using KaymakNetwork;
 using MasterServer.Clients;
@@ -18,17 +19,31 @@ namespace MasterServer.Network.Packets.Processors
 
             var incPacket = new BattlePackets.C2SAskPlayerAttack(buffer);
             var client = ClientManager.GetClient(connection);
+            Console.WriteLine(incPacket.attackType+"  "+ incPacket.styleCode);
             var outPacket= new BattlePackets.S2CAnsPlayerAttack(
                 (uint)client.UserId,
-                0,
-                0,
+                incPacket.attackType,
+                incPacket.styleCode,
                 0,
                 incPacket.targetPosition,
                 incPacket.objKey,
-                0,0,0,0
+                0,0,0,5
 
                 );
-            outPacket.Send(connection);
+            for(int i = 100; i < 255;i++)
+            {
+                var result = new byte[]
+                {
+                    03, 00,
+                    60, (byte)i,
+                    2
+                };
+                Console.WriteLine("Testing:"+i);
+                connection.SendUnmanagedBytes(result);
+                Thread.Sleep(1000);
+            }
+
+            //outPacket.Send(connection);
         }
     }
 }

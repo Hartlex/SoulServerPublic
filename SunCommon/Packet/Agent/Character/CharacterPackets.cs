@@ -323,7 +323,7 @@ namespace SunCommon.Packet.Agent.Character
 
             public S2CSkillInfo(Entities.Character character) : base(159)
             {
-                unk1 = new byte[] {0x01, 0x00, 0xe1, 0x2e};
+                unk1 = character.Skill;
                 //TODO probalby the skill byte array
             }
 
@@ -358,8 +358,10 @@ namespace SunCommon.Packet.Agent.Character
             {
                 styleInfo = new byte[]
                 {
-                    0x21, 0x00, 0x00, 0x00, 0x00, 0x0f,
-                    0x00
+                    1,
+                    0,
+                    197,234,
+
                 };
             }
 
