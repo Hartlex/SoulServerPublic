@@ -33,5 +33,10 @@ namespace SunCommon.Entities.Item
         {
             return npcShops[shopId].GetItem(page, index);
         }
+
+        public static void Shutdown()
+        {
+            npcShops.Clear();
+        }
     }
 }

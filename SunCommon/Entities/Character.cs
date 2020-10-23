@@ -7,13 +7,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using KaymakNetwork;
+using SunCommon.Entities.Item;
+using static SunCommon.PacketStructs;
 
 namespace SunCommon.Entities
 {
     public class Character
     {
-
-
         public int Id { get; set; }
         public Account Account { get; set; }
         public byte ClassCode { get; set; }
@@ -113,7 +113,7 @@ namespace SunCommon.Entities
             Hp = b.ReadSingle();
             MaxMp = b.ReadSingle();
             Mp = b.ReadSingle();
-            Inventory.Money = b.ReadInt64();
+            Inventory.Money = b.ReadUInt64();
             RemainStat = b.ReadInt32();
             RemainSkill = b.ReadInt32();
             PkState = b.ReadByte();
@@ -183,7 +183,21 @@ namespace SunCommon.Entities
 
         }
 
+        public void UpdatePosition(SunVector pos)
+        {
+            CharacterPosition.LocationX = pos.x;
+            CharacterPosition.LocationY = pos.y;
+            CharacterPosition.LocationZ = pos.z;
+        }
 
+        public bool BuyItem(SunItem item)
+        {
+            if (item.ItemSellMoney >= Inventory.Money) return false;
+            if (!Inventory.AddItemToInv(item, out var slotInfo)) return false;
+            Inventory.Money -= item.ItemSellMoney;
+            return true;
+
+        }
     }
 
 }

@@ -37,6 +37,7 @@ namespace MasterServer
         public void Shutdown()
         {
             Connection.StopListening(listener);
+            NetworkComms.Shutdown();
         }
         private void StartListening(string ipAdress, int port)
         {

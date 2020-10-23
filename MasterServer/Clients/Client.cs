@@ -24,6 +24,7 @@ namespace MasterServer.Clients
         private atZone atZone;
         private Character[] charslots = new Character[6];
         public uint objectKey;
+        public uint objectKey2;
 
         public Client(Connection authConnection, ShortGuid clientId)
         {

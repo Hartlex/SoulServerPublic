@@ -35,7 +35,6 @@ namespace MasterServer.Network.Packets
             LogPacketRecieved(packetID, protocolID, buffer, action.Method.Name);
             action(buffer, connection);
             return true;
-
         }
         public static void LogPacketRecieved(int packetID, int protocolID, ByteBuffer buffer, string name)
         {

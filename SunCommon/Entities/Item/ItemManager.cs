@@ -31,5 +31,10 @@ namespace SunCommon.Entities.Item
         {
             return new ItemSlotInfo(position,item);
         }
+
+        public static void Shutdown()
+        {
+            allItems.Clear();
+        }
     }
 }

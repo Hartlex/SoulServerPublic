@@ -193,7 +193,7 @@ namespace SunCommon
                 //TODO check if user can enter server
                 if (true)
                 {
-                    int userID = 33;
+                    int userID = 2;
                     string ip = "127.0.0.1";
                     int port = 8000;
                     var packet = new S2CAnsServerSelect2(userID,ip,port);

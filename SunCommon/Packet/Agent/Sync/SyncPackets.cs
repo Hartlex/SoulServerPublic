@@ -14,6 +14,38 @@ namespace SunCommon
 {
     public static class SyncPackets
     {
+        public class S2CMonsterEnter : SyncPacket
+        {
+            private byte[] objKey;
+            private byte[] monsterId;
+            private byte[] position;
+            private byte[] hp;
+            private byte[] maxhp;
+            private byte[] moveSpeedRatio;
+            private byte[] attackSpeedRatio;
+            private byte[] unk1;
+
+            public S2CMonsterEnter(uint objKey, ushort monsterId, SunVector position, uint hp,uint maxHp, ushort moveSpeedratio,
+                ushort attackSpeedRatio, ushort unk1) : base(174)
+            {
+                this.objKey = BitConverter.GetBytes(objKey);
+                this.monsterId = BitConverter.GetBytes(monsterId);
+                this.position = position.GetBytes();
+                this.hp = BitConverter.GetBytes(hp);
+                this.maxhp = BitConverter.GetBytes(maxHp);
+                this.moveSpeedRatio = BitConverter.GetBytes(moveSpeedratio);
+                this.attackSpeedRatio = BitConverter.GetBytes(attackSpeedRatio);
+                this.unk1 = BitConverter.GetBytes(unk1);
+
+
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(objKey, monsterId, position, hp, maxhp,moveSpeedRatio, attackSpeedRatio,unk1);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
         public class C2SAskEnterWorld: SyncPacket
         {
             private byte[] unk1;
@@ -50,10 +82,13 @@ namespace SunCommon
             private byte[] unk1;
             public S2CAnsGuildInfo(Character character) : base(234)
             {
-                unk1 = new byte[] { 0x01, 0x03, 0x00, 0x00, 0x00, 0xb8, 0x5c, 0x00, 0x00, 0xbc,
-                    0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc7, 0xe9,
-                    0xd2, 0xe5, 0xd3, 0xc0, 0xba, 0xe3, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00};
+                unk1 = new byte[] {
+                    //0x01, 0x03, 0x00, 0x00, 0x00, 0xb8, 0x5c, 0x00, 0x00, 0xbc,
+                    //0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc7, 0xe9,
+                    //0xd2, 0xe5, 0xd3, 0xc0, 0xba, 0xe3, 0x00, 0x00, 0x00,
+                    //0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00
+
+                };
             }
 
             public new void Send(Connection connection)
@@ -71,23 +106,23 @@ namespace SunCommon
             {
                 unk1 = new byte[]
                 {
-                    0x01,
-                    0x04, 0x00, 0x00, 0x00,
-                    0x09,
-                    0x00, 0x89, 0x00, 0x0c,
-                    0x00,
-                    0x01, 0xb5,
-                    0xe8, 0x0c, 0x00, 0x02,
-                    0xb6,
-                    0xe8, 0x0c, 0x00, 0x03,
-                    0xb7,
-                    0xe8, 0x0c, 0x00, 0x04,
-                    0xb8,
-                    0xe8, 0x0c, 0x00, 0x05,
-                    0xb9,
-                    0xe8, 0x0c, 0x00, 0x06,
-                    0xba,
-                    0xe8, 0x0c, 0x00, 0x07
+                    //0x01,
+                    //0x04, 0x00, 0x00, 0x00,
+                    //0x09,
+                    //0x00, 0x89, 0x00, 0x0c,
+                    //0x00,
+                    //0x01, 0xb5,
+                    //0xe8, 0x0c, 0x00, 0x02,
+                    //0xb6,
+                    //0xe8, 0x0c, 0x00, 0x03,
+                    //0xb7,
+                    //0xe8, 0x0c, 0x00, 0x04,
+                    //0xb8,
+                    //0xe8, 0x0c, 0x00, 0x05,
+                    //0xb9,
+                    //0xe8, 0x0c, 0x00, 0x06,
+                    //0xba,
+                    //0xe8, 0x0c, 0x00, 0x07
                 };
             }
 
@@ -141,14 +176,10 @@ namespace SunCommon
 
         public class C2SSyncNewPositionAfterJump : SyncPacket
         {
-            public Single x;
-            public Single y;
-            public Single z;
+            public SunVector pos;
             public C2SSyncNewPositionAfterJump(ByteBuffer buffer) : base(69)
             {
-                x = buffer.ReadSingle();
-                y = buffer.ReadSingle();
-                z = buffer.ReadSingle();
+                pos = new SunVector(buffer.ReadBlock(12));
             }
         }
 
@@ -161,17 +192,47 @@ namespace SunCommon
             }
         }
 
-        public class S2CSyncAllVillagePlayers : SyncPacket
+        public class S2CSyncAllPlayers : SyncPacket
         {
             private byte count;
-            public S2CSyncAllVillagePlayers(byte count) : base(122)
+            private byte[] unk1;
+            private byte[] name;
+            private byte[] pos;
+            private byte[] slotCode;
+            private byte[] unk2;
+            private byte[] unk3;
+
+            public S2CSyncAllPlayers(byte count) : base(249)
             {
                 this.count = count;
+                unk1 = new byte[]
+                {
+                    00,
+                    99, 00,
+                    200, 00,
+                    100, 00,
+                    10, 00,
+                    16
+                };
+                name = ByteUtils.ToByteArray("Night2", 16);
+                pos = new SunVector(-53f,-32f,-23f).GetBytes();
+                slotCode = BitConverter.GetBytes((ushort) 0);
+                unk2 = BitConverter.GetBytes(0x14880500);
+                unk3 = new byte[]
+                {
+                    0,0,0,0,
+                    1,
+                    42,
+                    70,
+                    3,
+                    0,0,0,0,0
+                };
+
             }
 
             public new void Send(Connection connection)
             {
-                var sb = GetSendableBytes(new[] {count});
+                var sb = GetSendableBytes(new[] {count},unk1,name,pos,slotCode,unk2,unk3);
                 connection.SendUnmanagedBytes(sb);
             }
         }
@@ -186,5 +247,48 @@ namespace SunCommon
                 MapId = buffer.ReadInt32();
             }
         }
+
+        public class S2CItemEnter : SyncPacket
+        {
+            private byte[] fromMonster;
+            private byte[] objKey;
+            private byte[] owner;
+            private byte[] itemType;
+            private byte[] heimAmount;
+            private byte[] unk1;
+            private byte[] item;
+            private byte[] pos;
+            private byte[] unk2;
+            public S2CItemEnter(uint fromMonster,uint objKey, uint owner, byte itemType, uint heimAmount, uint unk1, ItemInfo item,
+                SunVector pos) : base(93)
+            {
+                this.fromMonster = BitConverter.GetBytes(fromMonster);
+                this.objKey = BitConverter.GetBytes(objKey);
+                this.owner = BitConverter.GetBytes(owner);
+                this.itemType = new[] {itemType};
+                this.heimAmount = BitConverter.GetBytes(heimAmount);
+                this.unk1 = BitConverter.GetBytes(unk1);
+                this.pos = pos.GetBytes();
+
+                var x = new ItemInfoX(2);
+                x.durAmount = 10;
+                x.Serial = 10;
+
+                x.Devine = 1;
+                x.Rank = 2;
+                x.RankD = 10;
+                x.Enchant = 10;
+                this.item = x.GetBytes();
+                unk2 = new byte[5];
+
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes(fromMonster,objKey, owner, itemType, heimAmount, unk1, item,unk2, pos);
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
+
     }
 }

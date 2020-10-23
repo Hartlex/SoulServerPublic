@@ -36,8 +36,8 @@ namespace SunCommon.Entities.Item
         public int Durability;
         public float duraStrength;
         public int strengthPenaltiyIndex;
-        public long ItemSellMoney;
-        public long ItemSellMoneyMax;
+        public ulong ItemSellMoney;
+        public ulong ItemSellMoneyMax;
         public int Popup;
         public int MaterialType;
         public int TradeSellType;
@@ -149,8 +149,8 @@ namespace SunCommon.Entities.Item
             Durability = Int32.Parse(sl[24]);
             duraStrength = Single.Parse(sl[25]);
             strengthPenaltiyIndex = Int32.Parse(sl[26]);
-            ItemSellMoney = (Int64)Single.Parse(sl[27]);
-            ItemSellMoneyMax = (Int64) Single.Parse(sl[28]);
+            ItemSellMoney = (UInt64)Single.Parse(sl[27]);
+            ItemSellMoneyMax = (UInt64) Single.Parse(sl[28]);
             Popup = Int32.Parse(sl[29]);
             MaterialType = Int32.Parse(sl[30]);
             TradeSellType = Int32.Parse(sl[30+1]);

@@ -101,7 +101,6 @@ namespace SunCommon
             }
 
         }
-
         public class S2CAnsWorldPrepare : ConnectionPacket
         {
             private byte[] ip;
@@ -118,6 +117,42 @@ namespace SunCommon
                 var sb = GetSendableBytes(ip, port);
                 connection.SendUnmanagedBytes(sb);
             }
+        }
+        public class S2CWorldPrepareCMD : ConnectionPacket
+        {
+            public S2CWorldPrepareCMD() : base(108)
+            {
+
+            }
+
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes();
+                connection.SendUnmanagedBytes(sb);
+            }
+        }
+
+        public class S2CAnsBackToCharSelect : ConnectionPacket
+        {
+            public S2CAnsBackToCharSelect() : base(4)
+            {
+
+            }
+            public new void Send(Connection connection)
+            {
+                var sb = GetSendableBytes();
+                connection.SendUnmanagedBytes(sb);
+            }
+
+        }
+        public class C2SAskBackToCharSelect : ConnectionPacket
+        {
+            public C2SAskBackToCharSelect() : base(216)
+            {
+
+            }
+
+
         }
     }
 }

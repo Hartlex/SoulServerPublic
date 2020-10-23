@@ -252,7 +252,7 @@ namespace MasterServer.Database
         public short level;
         public int UserPoint;
         public Single MaxHp, MaxMp;
-        public long money;
+        public ulong money;
         public int experience;
         public int RemainStat, RemainSkill, selectedStyle, region;
         public short LocationX, LocationY, LocationZ;
@@ -282,7 +282,7 @@ namespace MasterServer.Database
                     UserPoint = reader.GetInt32(4);
                     MaxHp = reader.GetFloat(5);
                     MaxMp = reader.GetFloat(6);
-                    money = reader.GetInt64(7);
+                    money = (ulong)reader.GetInt64(7);
                     experience = reader.GetInt32(8);
                     RemainStat = reader.GetInt32(9);
                     RemainSkill = reader.GetInt32(10);

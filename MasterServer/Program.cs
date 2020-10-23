@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using SunCommon;
+using SunCommon.Entities.Map;
 using SunCommon.Parser;
 
 namespace MasterServer
@@ -18,6 +20,7 @@ namespace MasterServer
         [STAThread]
         static void Main()
         {
+            PortalManager.Initialize();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
