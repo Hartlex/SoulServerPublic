@@ -68,11 +68,11 @@ namespace SunCommon
 
         public class SunVector
         {
-            public Single x;
-            public Single y;
-            public Single z;
+            public float x;
+            public float y;
+            public float z;
 
-            public SunVector(Single x, Single y, Single z)
+            public SunVector(float x, float y, float z)
             {
                 this.x = x;
                 this.y = y;
